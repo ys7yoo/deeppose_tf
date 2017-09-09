@@ -51,10 +51,10 @@ download dataset
 cd datasets
 ./download.sh
 cd ..
-'''
+```
 
 generate csv files
-'''bash
+```bash
 export PYTHONPATH=`pwd`
 python datasets/lsp_dataset.py
 python datasets/mpii_dataset.py
