@@ -2,6 +2,13 @@
 
 Forked from https://github.com/asanakoy/deeppose_tf
 
+Modifications
+ * work with Python 3 and OpenCV 3.
+ * data location: ~/data
+ * script for "small" training (using LSP without extended model)
+ ```bash
+ examples/train_lsp_alexnet_imagenet_small.sh
+ ```
 
 **NOTE**: This is not an official implementation. Original paper is [DeepPose: Human Pose Estimation via Deep Neural Networks](http://arxiv.org/abs/1312.4659).
 
