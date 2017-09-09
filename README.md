@@ -5,7 +5,7 @@ Forked from https://github.com/asanakoy/deeppose_tf
 Modifications
  * work with Python 3 and OpenCV 3.
  * data location: ~/data
- * script for "small" training (using LSP without extended model)
+ * script for "small" training (using original LSP without extended images)
  ```bash
  examples/train_lsp_alexnet_imagenet_small.sh
  ```
