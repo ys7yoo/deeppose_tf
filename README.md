@@ -1,5 +1,8 @@
 # DeepPose (stg-1) on TensorFlow
 
+Forked from https://github.com/asanakoy/deeppose_tf
+
+
 **NOTE**: This is not an official implementation. Original paper is [DeepPose: Human Pose Estimation via Deep Neural Networks](http://arxiv.org/abs/1312.4659).
 
 This is implementation of DeepPose (stg-1).  
@@ -23,10 +26,18 @@ Requires around 10 Gb of free RAM.
 
 ### Installation of dependencies
 1. Install TensorFlow
-2. Install other dependencies via `pip`.  
-```pip install chainer numpy opencv tqdm```
-3. In [`scripts/config.py`](scripts/config.py) set `ROOT_DIR` to point to the root dir of the project.
-4. Download weights of alexnet pretrained on Imagenet [bvlc_alexnet.tf](https://hcicloud.iwr.uni-heidelberg.de/index.php/s/sNklPpCiqOYOCAz) and put them into [`weights/`](weights/) dir.
+2. Install OpenCV
+3. Install other dependencies via `pip`.  
+```pip install chainer numpy tqdm scipy```
+4. In [`scripts/config.py`](scripts/config.py) set `ROOT_DIR` to point to the root dir of the project.
+5. To start from the existing weights, download weights of alexnet pretrained on Imagenet [bvlc_alexnet.tf](https://hcicloud.iwr.uni-heidelberg.de/index.php/s/sNklPpCiqOYOCAz) and put them into [`weights/`](weights/) dir.
+
+```bash
+mkdir weights
+cd weights
+wget -O bvlc_alexnet.tf https://hcicloud.iwr.uni-heidelberg.de/index.php/s/sNklPpCiqOYOCAz/download
+```
+
 
 ### Dataset preparation
 
@@ -34,6 +45,7 @@ Requires around 10 Gb of free RAM.
 cd datasets
 bash download.sh
 cd ..
+export PYTHONPATH=`pwd`
 python datasets/lsp_dataset.py
 python datasets/mpii_dataset.py
 ```

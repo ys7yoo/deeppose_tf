@@ -101,8 +101,8 @@ def convert2canonical(joints):
                    3,   # Left hip
                    4,   # Left knee
                    5]   # Left ankle
-    canonical = [dict() for _ in xrange(joints.shape[0])]
-    for i in xrange(joints.shape[0]):
+    canonical = [dict() for _ in range(joints.shape[0])]
+    for i in range(joints.shape[0]):
         canonical[i]['joints'] = joints[i, joint_order, :]
         canonical[i]['sticks'] = joints2sticks(canonical[i]['joints'])
     return canonical

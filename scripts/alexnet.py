@@ -69,7 +69,7 @@ class Alexnet(object):
         elif isinstance(init_model, basestring):
             if not os.path.exists(init_model):
                 raise IOError('Net Weights file not found: {}'.format(init_model))
-            print 'Loading Net Weights from: {}'.format(init_model)
+            print('Loading Net Weights from: {}'.format(init_model))
             net_data = np.load(init_model).item()
 
         self.global_iter_counter = tf.Variable(0, name='global_iter_counter', trainable=False)
@@ -91,7 +91,7 @@ class Alexnet(object):
         self.sess = tf.Session(config=config)
 
     def __create_architecture(self, net_data, use_batch_norm):
-        print 'Alexnet::__create_architecture()'
+        print('Alexnet::__create_architecture()')
         tr_vars = dict()
         with tf.device(self.device_id):
             layer_index = 0
@@ -107,7 +107,7 @@ class Alexnet(object):
                 tr_vars['conv1w'], tr_vars['conv1b'] = \
                     self.get_conv_weights(layer_index, net_data,
                                           kernel_height, kernel_width,
-                                          num_input_channels / group, kernels_num)
+                                          int(num_input_channels / group), kernels_num)
                 layer_index += 1
                 conv1_in = Alexnet.conv(self.x, tr_vars['conv1w'], tr_vars['conv1b'],
                                         kernel_height, kernel_width,
@@ -145,7 +145,7 @@ class Alexnet(object):
                 tr_vars['conv2w'], tr_vars['conv2b'] = \
                     self.get_conv_weights(layer_index, net_data,
                                           kernel_height, kernel_width,
-                                          num_input_channels / group, kernels_num)
+                                          int(num_input_channels / group), kernels_num)
                 layer_index += 1
                 conv2_in = Alexnet.conv(maxpool1, tr_vars['conv2w'], tr_vars['conv2b'],
                                         kernel_height, kernel_width,
@@ -181,7 +181,7 @@ class Alexnet(object):
                 tr_vars['conv3w'], tr_vars['conv3b'] = \
                     self.get_conv_weights(layer_index, net_data,
                                           kernel_height, kernel_width,
-                                          num_input_channels / group, kernels_num)
+                                          int(num_input_channels / group), kernels_num)
                 layer_index += 1
                 conv3_in = Alexnet.conv(maxpool2, tr_vars['conv3w'], tr_vars['conv3b'],
                                         kernel_height, kernel_width,
@@ -201,7 +201,7 @@ class Alexnet(object):
                 tr_vars['conv4w'], tr_vars['conv4b'] = \
                     self.get_conv_weights(layer_index, net_data,
                                           kernel_height, kernel_width,
-                                          num_input_channels / group, kernels_num)
+                                          int(num_input_channels / group), kernels_num)
                 layer_index += 1
                 conv4_in = Alexnet.conv(conv3, tr_vars['conv4w'], tr_vars['conv4b'],
                                         kernel_height, kernel_width,
@@ -220,7 +220,7 @@ class Alexnet(object):
                 tr_vars['conv5w'], tr_vars['conv5b'] = \
                     self.get_conv_weights(layer_index, net_data,
                                           kernel_height, kernel_width,
-                                          num_input_channels / group, kernels_num)
+                                          int(num_input_channels / group), kernels_num)
                 layer_index += 1
                 self.conv5 = Alexnet.conv(conv4, tr_vars['conv5w'], tr_vars['conv5b'],
                                           kernel_height, kernel_width,
@@ -253,7 +253,7 @@ class Alexnet(object):
                     tr_vars['fc6b'], name='fc')
 
                 if use_batch_norm:
-                    print 'Using batch_norm after FC6'
+                    print('Using batch_norm after FC6')
                     self.fc6_bn = tflayers.batch_norm(self.fc6, decay=0.999,
                                                       is_training=self.is_phase_train,
                                                       trainable=False)
@@ -277,7 +277,7 @@ class Alexnet(object):
                 self.fc7 = tf.add(tf.matmul(fc6_dropout, tr_vars['fc7w']), tr_vars['fc7b'],
                                   name='fc')
                 if use_batch_norm:
-                    print 'Using batch_norm after FC7'
+                    print('Using batch_norm after FC7')
                     self.fc7_bn = tflayers.batch_norm(self.fc7, decay=0.999,
                                                       is_training=self.is_phase_train,
                                                       trainable=False)
@@ -322,19 +322,20 @@ class Alexnet(object):
         if num_layers > 8 or num_layers < 0:
             raise ValueError('You can restore only 0 to 8 layers.')
         if num_layers == 0:
-            print 'Not restoring anything'
+            print('Not restoring anything')
             return
-        items = self.trainable_vars.items()
-        items.sort()
-        vars_names_to_restore = [items[i][0] for i in xrange(num_layers * 2)]
-        vars_to_restore = [items[i][1] for i in xrange(num_layers * 2)]
-        print 'Restoring {} layers from the snapshot: {}'.format(num_layers, vars_names_to_restore)
+        items = sorted(self.trainable_vars.items()) # changed to work with Python 3
+#        items = self.trainable_vars.items()
+#        items.sort()
+        vars_names_to_restore = [items[i][0] for i in range(num_layers * 2)]
+        vars_to_restore = [items[i][1] for i in range(num_layers * 2)]
+        print('Restoring {} layers from the snapshot: {}'.format(num_layers, vars_names_to_restore))
         if restore_iter_counter:
             try:
                 saver = tf.train.Saver(var_list=[self.global_iter_counter])
                 saver.restore(self.sess, snapshot_path)
             except:
-                print 'Could not restore global_iter_counter.'
+                print('Could not restore global_iter_counter.')
 
         with self.graph.as_default():
             saver = tf.train.Saver(var_list=vars_to_restore)
@@ -342,8 +343,10 @@ class Alexnet(object):
 
     def get_conv_weights(self, layer_index, net_data, kernel_height, kernel_width,
                          num_input_channels, kernels_num):
-        layer_names = ['conv{}'.format(i) for i in xrange(1, 6)] + \
-                      ['fc{}'.format(i) for i in xrange(6, 9)]
+        layer_names = ['conv{}'.format(i) for i in range(1, 6)] + \
+                      ['fc{}'.format(i) for i in range(6, 9)]
+#        layer_names = ['conv{}'.format(i) for i in xrange(1, 6)] + \
+#                      ['fc{}'.format(i) for i in xrange(6, 9)]
         wights_std = [0.01] * 5 + [0.005, 0.005, 0.01]
         bias_init_values = [0.0, 0.1, 0.0, 0.1, 0.1, 0.1, 0.1, 0.0]
 
@@ -355,7 +358,7 @@ class Alexnet(object):
             assert net_data[l_name]['biases'].shape == (kernels_num,)
 
         if layer_index >= self.num_layers_to_init or net_data is None:
-            print 'Initializing {} with random'.format(l_name)
+            print('Initializing {} with random'.format(l_name))
             w = self.random_weight_variable((kernel_height, kernel_width,
                                              num_input_channels,
                                              kernels_num),
@@ -372,8 +375,8 @@ class Alexnet(object):
         if layer_index <= 8:
             if wights_std is not None or bias_init_value is not None:
                 raise ValueError('std and bias must be None for layers 1..8, they are set up automatically')
-            layer_names = ['conv{}'.format(i) for i in xrange(1, 6)] + \
-                          ['fc{}'.format(i) for i in xrange(6, 9)]
+            layer_names = ['conv{}'.format(i) for i in range(1, 6)] + \
+                          ['fc{}'.format(i) for i in range(6, 9)]
             wights_stds = [0.01] * 5 + [0.005, 0.005, 0.01]
             bias_init_values = [0.0, 0.1, 0.0, 0.1, 0.1, 0.1, 0.1, 0.0]
             l_name = layer_names[layer_index]
@@ -393,7 +396,7 @@ class Alexnet(object):
             assert net_data[l_name]['biases'].shape == (num_outputs,)
 
         if layer_index >= self.num_layers_to_init or net_data is None:
-            print 'Initializing {} with random'.format(l_name)
+            print('Initializing {} with random'.format(l_name))
             w = self.random_weight_variable((num_inputs, num_outputs),
                                             stddev=wights_std)
             b = self.random_bias_variable((num_outputs,), value=bias_init_value)

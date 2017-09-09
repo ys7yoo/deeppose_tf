@@ -58,7 +58,12 @@ if __name__ == '__main__':
     parser.add_argument('--extended_lsp_joints_path', type=str, default=os.path.join(LSP_EXT_DATASET_ROOT, 'joints.mat'))
     parser.add_argument('--small_lsp_images_dir', type=str, default=os.path.join(LSP_DATASET_ROOT, 'images'))
     parser.add_argument('--small_lsp_joints_path', type=str, default=os.path.join(LSP_DATASET_ROOT, 'joints.mat'))
-    parser.add_argument('--output_dir', type=str, default=LSP_EXT_DATASET_ROOT)
+
+    READ_LSP_EXT=0
+    if(READ_LSP_EXT):
+        parser.add_argument('--output_dir', type=str, default=LSP_EXT_DATASET_ROOT)
+    else:
+        parser.add_argument('--output_dir', type=str, default=LSP_DATASET_ROOT)
     args = parser.parse_args()
     print(args)
     if not os.path.exists(args.output_dir):
@@ -68,28 +73,33 @@ if __name__ == '__main__':
     file_test = open('%s/test_joints.csv' % args.output_dir, 'w')
     file_train_lsp_small = open('%s/train_lsp_small_joints.csv' % args.output_dir, 'w')
 
-    print('Read LSP_EXT')
-    lsp_ext_lines = create_data(args.extended_lsp_images_dir, args.extended_lsp_joints_path,
-                                transpose_order=(2, 0, 1))
     print('Read LSP')
     lsp_small_lines = create_data(args.small_lsp_images_dir, args.small_lsp_joints_path,
                                   transpose_order=(2, 1, 0))  # different dim order
-    print('Extended LSP images:', len(lsp_ext_lines))
+ 
     print('Small LSP images:', len(lsp_small_lines))
-    if len(lsp_ext_lines) != 10000:
-        raise Exception('Extended LSP dataset must contain 10000 images!')
     if len(lsp_small_lines) != 2000:
         raise Exception('Small LSP dataset must contain 2000 images!')
-    num_small_lsp_train = 1000
 
-    for line in lsp_ext_lines:
-        print(line, file=file_train)
+    num_small_lsp_train = 1000
     for line in lsp_small_lines[:num_small_lsp_train]:
         print(line, file=file_train)
         print(line, file=file_train_lsp_small)
     for line in lsp_small_lines[num_small_lsp_train:]:
         print(line, file=file_test)
 
+    file_train_lsp_small.close()
+
+    if (READ_LSP_EXT):
+        print('Read LSP_EXT')
+        lsp_ext_lines = create_data(args.extended_lsp_images_dir, args.extended_lsp_joints_path,
+                                    transpose_order=(2, 0, 1))
+        print('Extended LSP images:', len(lsp_ext_lines))
+        if len(lsp_ext_lines) != 10000:
+            raise Exception('Extended LSP dataset must contain 10000 images!')
+
+        for line in lsp_ext_lines:
+            print(line, file=file_train)
+
     file_train.close()
     file_test.close()
-    file_train_lsp_small.close()

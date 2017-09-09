@@ -24,7 +24,7 @@ def evaluate(net, pose_loss_op, test_iterator, summary_writer, tag='test/pose_lo
     total_loss = 0.0
     cnt = 0
     num_batches = int(math.ceil(len(test_it.dataset) / test_it.batch_size))
-    print len(test_it.dataset)
+    print(len(test_it.dataset))
     for batch in tqdm(test_it, total=num_batches):
         feed_dict = regressionnet.fill_joint_feed_dict(net,
                                                        regressionnet.batch2feeds(batch)[:3],
@@ -36,7 +36,7 @@ def evaluate(net, pose_loss_op, test_iterator, summary_writer, tag='test/pose_lo
         total_loss += loss_value * len(batch)
         cnt += len(batch)
     avg_loss = total_loss / len(test_it.dataset)
-    print 'Step {} {} = {:.3f}'.format(global_step, tag, avg_loss)
+    print ('Step {} {} = {:.3f}'.format(global_step, tag, avg_loss))
     summary_writer.add_summary(create_sumamry(tag, avg_loss),
                                global_step=global_step)
     assert cnt == 1000, 'cnt = {}'.format(cnt)
@@ -63,7 +63,7 @@ def train_loop(net, saver, loss_op, pose_loss_op, train_op, dataset_name, train_
         fc_train_op = net.graph.get_operation_by_name('fc_train_op')
     global_step = None
 
-    for step in xrange(max_iter + 1):
+    for step in range(max_iter + 1):
 
         # test, snapshot
         if step % test_step == 0 or step + 1 == max_iter or step == fix_conv_iter:
@@ -142,7 +142,7 @@ def main(argv):
     with net.graph.as_default():
         saver = tf.train.Saver()
 
-    print 'args.resume: {}\nargs.snapshot: {}'.format(args.resume, args.snapshot)
+    print ('args.resume: {}\nargs.snapshot: {}'.format(args.resume, args.snapshot))
     bbox_extension_range = (args.bbox_extension_min, args.bbox_extension_max)
     if bbox_extension_range[0] is None or bbox_extension_range[1] is None:
         bbox_extension_range = None

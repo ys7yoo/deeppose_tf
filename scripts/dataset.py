@@ -103,7 +103,7 @@ class PoseDataset(dataset_mixin.DatasetMixin):
             # clip joints to fit the image
             should_skip_joints = False
             image_shape = image.shape
-            for i_joint in xrange(joints.shape[0]):
+            for i_joint in range(joints.shape[0]):
                 if np.all(is_valid_joints[i_joint]):
                     if joints[i_joint][0] - image_shape[1] > 3 or \
                        joints[i_joint][1] - image_shape[0] > 3:
