@@ -19,14 +19,12 @@ Performance of Alexnet pretrained on Imagenet and finetuned on LSP is close to t
 
 ### Requirements
 
-- Python 2.7
-  - TensorFlow r1.0
-  - [Chainer 1.17.0+](https://github.com/pfnet/chainer) (for background data processing only)
-  - numpy 1.12+
-  - OpenCV 2.4.8+
+  - Python 3.X
+  - TensorFlow r1.0+
+  - OpenCV 3.X
+  - [Chainer 1.17.0+](https://github.com/pfnet/chainer) (for background data processing only)  
   - tqdm 4.8.4+
-  
-For tensorflow version 0.11.0rc0 and 0.12.0rc0 checkout branch [r0.12](https://github.com/asanakoy/deeppose_tf/tree/tensorflow_r0.12)
+
 
 #### RAM requirements
 Requires around 10 Gb of free RAM.
@@ -48,10 +46,15 @@ wget -O bvlc_alexnet.tf https://hcicloud.iwr.uni-heidelberg.de/index.php/s/sNklP
 
 ### Dataset preparation
 
-```sh
+download dataset 
+```bash
 cd datasets
-bash download.sh
+./download.sh
 cd ..
+'''
+
+generate csv files
+'''bash
 export PYTHONPATH=`pwd`
 python datasets/lsp_dataset.py
 python datasets/mpii_dataset.py
