@@ -43,5 +43,5 @@ argv = """
 """.format(scripts.config.ROOT_DIR)
 
 argv = shlex.split(argv)
-print argv
+print(argv)
 scripts.train.main(argv)
