@@ -53,7 +53,9 @@ Requires around 10 Gb of free RAM.
 
 3. Install other dependencies via `pip`.  
 
-   ```pip install --upgrade chainer numpy tqdm scipy```
+   ```bash
+   pip install --upgrade chainer numpy tqdm scipy
+   ```
    
 4. In [`scripts/config.py`](scripts/config.py) set `ROOT_DIR` to point to the root dir of the project.
 
@@ -92,10 +94,10 @@ python datasets/mpii_dataset.py
 [examples/](examples/) provide several scripts for training on LSP + LSP_EXT and MPII:
 - [examples/train_lsp_alexnet_imagenet_small.sh](examples/train_lsp_alexnet_imagenet_small.sh) to run training Alexnet on LSP using weights pretrained on Imagenet.
 - [examples/train_lsp_alexnet_scratch.sh](examples/train_lsp_alexnet_scratch.sh) to run training Alexnet on LSP + LSP_EXT from scratch
-- [examples/train_mpii_alexnet_scratch.py](examples/train_mpii_alexnet_scratch.sh) to run training Alexnet on MPII from scratch.
 - [examples/train_mpii_alexnet_imagenet.py](examples/train_mpii_alexnet_imagenet.sh) to run training Alexnet on MPII using weights pretrained on Imagenet.
+- [examples/train_mpii_alexnet_scratch.py](examples/train_mpii_alexnet_scratch.sh) to run training Alexnet on MPII from scratch.
 
-**Example:** `bash examples/train_lsp_alexnet_scratch.sh`
+**Example:** `bash examples/train_lsp_alexnet_imagenet_small.sh`
 
 All these scripts call [`train.py`](scripts/train.py).  
 To check which options it accepts and which default values are set, please look into [`cmd_options.py`](scripts/cmd_options.py).
