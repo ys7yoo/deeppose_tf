@@ -1,7 +1,7 @@
 import os
 
 # Full path to the project root
-ROOT_DIR = os.path.expanduser('~/src/deeppose_tf')
+ROOT_DIR = os.path.expanduser('~/src/deeppose')
 OUTPUT_DIR = os.path.join(ROOT_DIR, 'out')
 #LSP_DATASET_ROOT = os.path.join(ROOT_DIR, 'datasets/lsp')
 LSP_DATASET_ROOT = os.path.expanduser('~/data/lsp')
