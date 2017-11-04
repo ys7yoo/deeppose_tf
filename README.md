@@ -50,16 +50,20 @@ Requires around 10 Gb of free RAM.
    ```
    
 2. Install OpenCV
+
 3. Install other dependencies via `pip`.  
-```pip install chainer numpy tqdm scipy```
+
+   ```pip install chainer numpy tqdm scipy```
+   
 4. In [`scripts/config.py`](scripts/config.py) set `ROOT_DIR` to point to the root dir of the project.
+
 5. To start from the existing weights, download weights of alexnet pretrained on Imagenet [bvlc_alexnet.tf](https://hcicloud.iwr.uni-heidelberg.de/index.php/s/sNklPpCiqOYOCAz) and put them into [`weights/`](weights/) dir.
 
-```bash
-mkdir weights
-cd weights
-wget -O bvlc_alexnet.tf https://hcicloud.iwr.uni-heidelberg.de/index.php/s/sNklPpCiqOYOCAz/download
-```
+   ```bash
+   mkdir weights
+   cd weights
+   wget -O bvlc_alexnet.tf https://hcicloud.iwr.uni-heidelberg.de/index.php/s/sNklPpCiqOYOCAz/download
+   ```
 
 
 ### Dataset preparation
