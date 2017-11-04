@@ -53,7 +53,7 @@ Requires around 10 Gb of free RAM.
 
 3. Install other dependencies via `pip`.  
 
-   ```pip install chainer numpy tqdm scipy```
+   ```pip install --upgrade chainer numpy tqdm scipy```
    
 4. In [`scripts/config.py`](scripts/config.py) set `ROOT_DIR` to point to the root dir of the project.
 
