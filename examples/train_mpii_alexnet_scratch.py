@@ -11,10 +11,10 @@ argv = """
 --test_step 250 \
 --log_step 2 \
 --dataset_name mpii
---train_csv_fn {0}/datasets/mpii/train_joints.csv \
---test_csv_fn {0}/datasets/mpii/test_joints.csv \
+--train_csv_fn {0}/train_joints.csv \
+--test_csv_fn {0}/test_joints.csv \
 --val_csv_fn '' \
---img_path_prefix {0}/datasets/mpii/images \
+--img_path_prefix {0}/images \
 --should_downscale_images \
 --downscale_height 400 \
 --n_joints 16 \
@@ -33,13 +33,13 @@ argv = """
 --fc_lr 0.0005 \
 --fix_conv_iter 0 \
 --optimizer adagrad \
---o_dir {0}/out/mpii_alexnet_scratch \
+--o_dir {1}/out/mpii_alexnet_scratch \
 --gcn \
 --fliplr \
 --workers 4 \
 --net_type Alexnet \
 --reset_iter_counter
-""".format(scripts.config.ROOT_DIR)
+""".format(scripts.config.MPII_DATASET_ROOT,scripts.config.ROOT_DIR)
 
 argv = shlex.split(argv)
 print(argv)
