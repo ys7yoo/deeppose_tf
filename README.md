@@ -11,10 +11,11 @@ Modifications
    cd ~
    mkdir data
    ```
- * script for "small" training (using original LSP without extended images)
- ```bash
- examples/train_lsp_alexnet_imagenet_small.sh
- ```
+ * script for "small" training set (using original LSP without extended images)
+ 
+    ```bash
+    examples/train_lsp_alexnet_imagenet_small.sh
+    ```
 
 **NOTE**: This is not an official implementation. Original paper is [DeepPose: Human Pose Estimation via Deep Neural Networks](http://arxiv.org/abs/1312.4659).
 
