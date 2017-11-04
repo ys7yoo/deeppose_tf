@@ -38,6 +38,17 @@ Requires around 10 Gb of free RAM.
 
 ### Installation of dependencies
 1. Install TensorFlow
+
+   With GPU, run this.
+   ```
+   pip install --upgrade tensorflow-gpu
+   ```
+   
+   Without GPU, run this.
+   ```
+   pip install --upgrade tensorflow
+   ```
+   
 2. Install OpenCV
 3. Install other dependencies via `pip`.  
 ```pip install chainer numpy tqdm scipy```
