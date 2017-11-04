@@ -97,7 +97,20 @@ python datasets/mpii_dataset.py
 - [examples/train_mpii_alexnet_imagenet.py](examples/train_mpii_alexnet_imagenet.sh) to run training Alexnet on MPII using weights pretrained on Imagenet.
 - [examples/train_mpii_alexnet_scratch.py](examples/train_mpii_alexnet_scratch.sh) to run training Alexnet on MPII from scratch.
 
-**Example:** `bash examples/train_lsp_alexnet_imagenet_small.sh`
+**Example:** 
+To use bash script, run the following from the ROOT folder.
+
+```
+bash examples/train_lsp_alexnet_imagenet_small.sh
+```
+
+To run the python code, setup the PYTHONPATH and then launch the py code.
+
+```
+export PYTHONPATH="$(pwd):$(pwd)/scripts"
+python examples/train_mpii_alexnet_imagenet.py 
+```
+
 
 All these scripts call [`train.py`](scripts/train.py).  
 To check which options it accepts and which default values are set, please look into [`cmd_options.py`](scripts/cmd_options.py).
