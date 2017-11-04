@@ -37,4 +37,4 @@ python ${PROJ_ROOT}/scripts/train.py \
 --net_type Alexnet \
 -s ${PROJ_ROOT}/weights/bvlc_alexnet.tf \
 --reset_iter_counter
-# -s ${PROJ_ROOT}/out/lsp_alexnet_imagenet/checkpoint-260000
+# -s ${PROJ_ROOT}/out/lsp_alexnet_imagenet_small/checkpoint-260000
