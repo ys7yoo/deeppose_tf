@@ -5,6 +5,12 @@ Forked from https://github.com/asanakoy/deeppose_tf
 Modifications
  * work with Python 3 and OpenCV 3.
  * data location: ~/data
+ 
+   So, make a data dir under your home folder.
+   ```bash
+   cd ~
+   mkdir data
+   ```
  * script for "small" training (using original LSP without extended images)
  ```bash
  examples/train_lsp_alexnet_imagenet_small.sh
