@@ -100,13 +100,13 @@ python datasets/mpii_dataset.py
 **Example:** 
 To use bash script, run the following from the ROOT folder.
 
-```
+```bash
 bash examples/train_lsp_alexnet_imagenet_small.sh
 ```
 
 To run the python code, setup the PYTHONPATH and then launch the py code.
 
-```
+```bash
 export PYTHONPATH="$(pwd):$(pwd)/scripts"
 python examples/train_mpii_alexnet_imagenet.py 
 ```
