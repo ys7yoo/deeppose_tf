@@ -40,11 +40,18 @@ Requires around 10 Gb of free RAM.
 1. Install TensorFlow
 
    With GPU, run this.
-   ```
+   ```bash 
    pip install --upgrade tensorflow-gpu
    ```
    
-   Without GPU, run this.
+   To use CUDA, add the following lines at the end of ~/.bashrc
+   ```bash
+   export PATH=$PATH:/usr/local/cuda/bin
+   export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/local/cuda/lib64
+   export LD_INCLUDE_PATH=$LD_INCLUDE_PATH:/usr/local/cuda/include
+   ```
+   
+   To install Tensorflow without GPU, run this.
    ```
    pip install --upgrade tensorflow
    ```
