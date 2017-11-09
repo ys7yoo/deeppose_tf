@@ -4,11 +4,9 @@
 # Get LSP Dataset
 #wget http://www.comp.leeds.ac.uk/mat4saj/lsp_dataset_original.zip
 #unzip lsp_dataset_original.zip
-#unzip lsp_dataset_original.zip
 #rm -rf lsp_dataset_original.zip
 # ADDRESS CHANGED
 wget http://sam.johnson.io/research/lsp_dataset.zip
-unzip lsp_dataset.zip
 unzip lsp_dataset.zip
 rm -rf lsp_dataset.zip
 
