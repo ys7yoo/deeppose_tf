@@ -92,8 +92,8 @@ python datasets/lsp_dataset.py
 python datasets/mpii_dataset.py
 ```
 
-- [LSP dataset](http://www.comp.leeds.ac.uk/mat4saj/lsp.html) (1000 tran / 1000 test images)
-- [LSP Extended dataset](http://www.comp.leeds.ac.uk/mat4saj/lspet_dataset.zip) (10000 train images)
+- [LSP dataset](http://sam.johnson.io/research/lsp.html) (1000 tran / 1000 test images)
+- [LSP Extended dataset](http://sam.johnson.io/research/lspet.html) (10000 train images)
 - **MPII dataset** (use original train set and split it into 17928 train / 1991 test images)
     - [Annotation](http://datasets.d2.mpi-inf.mpg.de/leonid14cvpr/mpii_human_pose_v1_u12_1.tar.gz)
     - [Images](http://datasets.d2.mpi-inf.mpg.de/andriluka14cvpr/mpii_human_pose_v1.tar.gz)
