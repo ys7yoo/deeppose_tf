@@ -2,9 +2,6 @@
 # Script for downloading Datasets: LSP, LSP Extended
 
 # Get LSP Dataset
-#wget http://www.comp.leeds.ac.uk/mat4saj/lsp_dataset_original.zip
-#unzip lsp_dataset_original.zip
-#rm -rf lsp_dataset_original.zip
 # ADDRESS CHANGED
 wget http://sam.johnson.io/research/lsp_dataset.zip
 unzip lsp_dataset.zip
@@ -20,7 +17,6 @@ mv lsp ~/data/
 
 
 # Get LSP Extended Training Dataset
-#wget http://www.comp.leeds.ac.uk/mat4saj/lspet_dataset.zip
 # ADDRESS CHANGED
 wget http://sam.johnson.io/research/lspet_dataset.zip
 unzip lspet_dataset.zip
