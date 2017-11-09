@@ -77,10 +77,11 @@ Requires around 10 Gb of free RAM.
 
 ### Dataset preparation
 
-download dataset 
+download datasets 
 ```bash
 cd datasets
-./download.sh
+./download_lsp.sh
+./download_mpii.sh
 cd ..
 ```
 
