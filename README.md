@@ -80,8 +80,8 @@ Requires around 10 Gb of free RAM.
 download datasets 
 ```bash
 cd datasets
-./download_lsp.sh
-./download_mpii.sh
+./download_lsp.sh   # to get LSP dataset
+./download_mpii.sh  # to get MPII dataset
 cd ..
 ```
 
