@@ -75,8 +75,14 @@ Requires around 10 Gb of free RAM.
    ```
 
 
-### Dataset preparation
-
+### Dataset information
+- [LSP dataset](http://sam.johnson.io/research/lsp.html) (1000 tran / 1000 test images)
+- [LSP Extended dataset](http://sam.johnson.io/research/lspet.html) (10000 train images)
+- **MPII dataset** (use original train set and split it into 17928 train / 1991 test images)
+    - [Annotation](http://datasets.d2.mpi-inf.mpg.de/leonid14cvpr/mpii_human_pose_v1_u12_1.tar.gz)
+    - [Images](http://datasets.d2.mpi-inf.mpg.de/andriluka14cvpr/mpii_human_pose_v1.tar.gz)
+    
+### Dataset preparation    
 download datasets 
 ```bash
 cd datasets
@@ -91,12 +97,6 @@ export PYTHONPATH=`pwd`
 python datasets/lsp_dataset.py
 python datasets/mpii_dataset.py
 ```
-
-- [LSP dataset](http://sam.johnson.io/research/lsp.html) (1000 tran / 1000 test images)
-- [LSP Extended dataset](http://sam.johnson.io/research/lspet.html) (10000 train images)
-- **MPII dataset** (use original train set and split it into 17928 train / 1991 test images)
-    - [Annotation](http://datasets.d2.mpi-inf.mpg.de/leonid14cvpr/mpii_human_pose_v1_u12_1.tar.gz)
-    - [Images](http://datasets.d2.mpi-inf.mpg.de/andriluka14cvpr/mpii_human_pose_v1.tar.gz)
 
 ### Training
 [examples/](examples/) provide several scripts for training on LSP + LSP_EXT and MPII:
