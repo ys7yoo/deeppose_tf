@@ -11,6 +11,7 @@ mkdir lsp
 mv images lsp/
 mv joints.mat lsp/
 mv README.txt lsp/
+mv visualized lsp/
 
 # move it to ~/data
 mv lsp ~/data/
