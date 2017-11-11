@@ -42,12 +42,12 @@ def main(dataset_name, snapshot_path):
         init_snapshot_path: path to the snapshot to test
     """
     if dataset_name == 'mpii':
-        TEST_CV_FILEPATH = os.path.join(config.ROOT_DIR, 'datasets/mpii/test_joints.csv')
-        IMG_PATH_PREFIX = os.path.join(config.ROOT_DIR, 'datasets/mpii/images')
+        TEST_CV_FILEPATH = os.path.join(config.MPII_DATASET_ROOT, '/test_joints.csv')
+        IMG_PATH_PREFIX = os.path.join(config.MPII_DATASET_ROOT, '/images')
         symmetric_joints = "[[12, 13], [11, 14], [10, 15], [2, 3], [1, 4], [0, 5]]"
         ignore_label = -100500
     else:
-        TEST_CV_FILEPATH = os.path.join(config.ROOT_DIR, 'datasets/lsp_ext/test_joints.csv')
+        TEST_CV_FILEPATH = os.path.join(config.LSP_DATASET_ROOT, '/test_joints.csv')
         IMG_PATH_PREFIX = ''
         symmetric_joints = "[[8, 9], [7, 10], [6, 11], [2, 3], [1, 4], [0, 5]]"
         ignore_label = -1
