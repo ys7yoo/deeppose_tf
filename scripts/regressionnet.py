@@ -8,8 +8,8 @@ import math
 import time
 from tqdm import tqdm
 
-import alexnet
-import network_spec
+from . import alexnet
+from . import network_spec
 #import poseevaluation
 from poseevaluation.utils import *
 from poseevaluation.lsp import *
