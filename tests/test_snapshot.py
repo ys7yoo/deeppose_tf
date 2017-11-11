@@ -22,7 +22,7 @@ def get_gt_data(test_iterator):
     gt_joints_is_valid = list()
     orig_bboxes = list()
 
-    print len(test_it.dataset)
+    print(len(test_it.dataset))
     for i, batch in tqdm(enumerate(test_it), total=num_batches):
         feeds = batch2feeds(batch)
         gt_joints.append(feeds[1])
@@ -88,10 +88,10 @@ def test_net(test_dataset, test_iterator, dataset_name, snapshot_path):
         net_type='Alexnet',
         optimizer_type='momentum',
         gpu_memory_fraction=0.32)  # Set how much GPU memory to reserve for the network
-    print snapshot_path
+    print(snapshot_path)
     for ext in np.linspace(1.0, 2.0, 6, True):
-        print '\n===================='
-        print 'BBOX EXTENSION:', ext
+        print('\n====================')
+        print('BBOX EXTENSION:', ext)
         test_dataset.bbox_extension_range = (ext, ext)
         scripts.regressionnet.evaluate_pcp(net, pose_loss_op, test_iterator, None,
                                            dataset_name=dataset_name,
@@ -100,8 +100,8 @@ def test_net(test_dataset, test_iterator, dataset_name, snapshot_path):
 
 if __name__ == '__main__':
     if len(sys.argv) != 3:
-        print 'Wrong arguments passed.'
-        print 'USAGE: {} (mpii|lsp) snapshot_path'
+        print('Wrong arguments passed.')
+        print('USAGE: {} (mpii|lsp) snapshot_path')
     else:
         dataset_name = sys.argv[1]
         snapshot_path = sys.argv[2]
