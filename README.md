@@ -164,8 +164,12 @@ BBOX EXTENSION=1.5 means that the bounding box of the person was enlarged in 1.5
 **Usage:**  `python tests/test_snapshot.py DATASET_NAME SNAPSHOT_PATH`,   
    - where `DATASET_NAME` is `'lsp'` or `'mpii'`,   
    - `SNAPSHOT_PATH` is the path to the snapshot.   
+   
+   For example, 
+   ```bash
+   python tests/test_snapshot.py lsp out/lsp_alexnet_imagenet_small/checkpoint-150000
+   ```
 
-**Example:** `python tests/test_snapshot.py lsp out/lsp_alexnet_scratch/checkpoint-10000`
 
 ### Results
 Results for Random initialization and Alexnet initialization from our CVPR 2017 paper [Deep Unsupervised Similarity Learning using Partially Ordered Sets](https://arxiv.org/abs/1704.02268). Check the paper for more results using our initialization and Shuffle&Learn initialization.
