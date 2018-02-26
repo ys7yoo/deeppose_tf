@@ -1,5 +1,8 @@
 #!/bin/bash
 PROJ_ROOT=$(pwd)
+
+DATA_ROOT=~/data
+
 CUDA_VISIBLE_DEVICES=0 \
 PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH \
 python ${PROJ_ROOT}/scripts/train.py \
@@ -8,9 +11,9 @@ python ${PROJ_ROOT}/scripts/train.py \
 --snapshot_step 10000 \
 --test_step 250 \
 --log_step 1 \
---train_csv_fn ${PROJ_ROOT}/datasets/lsp_ext/train_joints.csv \
---test_csv_fn ${PROJ_ROOT}/datasets/lsp_ext/test_joints.csv \
---val_csv_fn ${PROJ_ROOT}/datasets/lsp_ext/train_lsp_small_joints.csv \
+--train_csv_fn ${DATA_ROOT}/lsp_ext/train_joints.csv \
+--test_csv_fn ${DATA_ROOT}/lsp_ext/test_joints.csv \
+--val_csv_fn ${DATA_ROOT}/lsp_ext/train_lsp_small_joints.csv \
 --img_path_prefix="" \
 --n_joints 14 \
 --seed 1701 \
