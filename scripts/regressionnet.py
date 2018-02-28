@@ -14,7 +14,9 @@ from scripts import alexnet
 from scripts import network_spec
 #import poseevaluation
 from poseevaluation.utils import *
-from poseevaluation.lsp import *
+#from poseevaluation.lsp import *
+from poseevaluation import lsp
+from poseevaluation import mpii
 from poseevaluation.pcp import *
 
 def create_regression_net(n_joints=14, optimizer_type=None,
@@ -219,13 +221,21 @@ def calculate_metric(gt_joints, predicted_joints, orig_bboxes, dataset_name, met
             predicted_joints[i], orig_bboxes[i])
 
     print(dataset_name)
-##  QUICK FIX FOR LSP!
-#    from poseevaluation.lsp import *
+
+    if dataset_name == 'mpii':
+        gt_joints = mpii.convert2canonical(gt_joints)
+        predicted_joints = mpii.convert2canonical(predicted_joints)
+    else: 
+        gt_joints = lsp.convert2canonical(gt_joints)
+        predicted_joints = lsp.convert2canonical(predicted_joints)
+
 
 #    gt_joints = poseevaluation.__dict__[dataset_name].convert2canonical(gt_joints)
 #    predicted_joints = poseevaluation.__dict__[dataset_name].convert2canonical(predicted_joints)
-    gt_joints = convert2canonical(gt_joints)
-    predicted_joints = convert2canonical(predicted_joints)
+
+#   QUICK FIX FOR LSP
+#    gt_joints = convert2canonical(gt_joints)
+#    predicted_joints = convert2canonical(predicted_joints)
 
 
 #    from poseevaluation.pcp import *
