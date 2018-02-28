@@ -1,7 +1,7 @@
 #!/bin/bash
 PROJ_ROOT=$(pwd)
 
-DATA_ROOT=/tmp/data
+DATA_ROOT=/var/data
 
 CUDA_VISIBLE_DEVICES=0 \
 PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH \

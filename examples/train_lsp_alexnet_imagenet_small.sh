@@ -3,7 +3,7 @@ PROJ_ROOT=$(pwd)
 CUDA_VISIBLE_DEVICES=0 \
 export PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH 
 
-DATA_ROOT=/tmp/data
+DATA_ROOT=/var/data
 
 python ${PROJ_ROOT}/scripts/train.py \
 --max_iter 1000000 \
