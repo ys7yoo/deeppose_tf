@@ -107,8 +107,8 @@ def convert2canonical(joints):
                    7,  # Thorax
                    6]  # Pelvis
     assert len(joint_order) == len(set(joint_order))
-    canonical = [dict() for _ in xrange(joints.shape[0])]
-    for i in xrange(joints.shape[0]):
+    canonical = [dict() for _ in range(joints.shape[0])]
+    for i in range(joints.shape[0]):
         canonical[i]['joints'] = joints[i, joint_order, :]
         canonical[i]['sticks'] = joints2sticks(canonical[i]['joints'])
     return canonical
