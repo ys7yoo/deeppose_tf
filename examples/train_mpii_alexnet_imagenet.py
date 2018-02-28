@@ -1,8 +1,12 @@
 import sys
 import shlex
 import os.path
-import scripts.train
-import scripts.config
+from scripts import train
+from scripts import config
+
+
+print(config.ROOT_DIR)
+print(config.MPII_DATASET_ROOT)
 
 argv = """
 --max_iter 1000000 \
@@ -40,8 +44,8 @@ argv = """
 --net_type Alexnet \
 -s {1}/weights/bvlc_alexnet.tf \
 --reset_iter_counter
-""".format(scripts.config.MPII_DATASET_ROOT,scripts.config.ROOT_DIR)
+""".format(config.MPII_DATASET_ROOT, config.ROOT_DIR)
 
 argv = shlex.split(argv)
 print(argv)
-scripts.train.main(argv)
+train.main(argv)
