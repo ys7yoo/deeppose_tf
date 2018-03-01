@@ -88,12 +88,13 @@ def create_regression_net(n_joints=14, optimizer_type=None,
         if init_snapshot_path is not None:
             if not is_resume:
                 if net_type == 'Alexnet':
+                    print('restoring from'+init_snapshot_path)
                     net.restore_from_snapshot(init_snapshot_path, 7,
                                               restore_iter_counter=False)
                 else:
                     raise ValueError('unknown net type {}'.format(net_type))
             else:
-                print('Restoring everything from snapshot and resuming')
+                print('Restoring everything from snapshot and resuming'+init_snapshot_path)
                 saver = tf.train.Saver()
                 saver.restore(net.sess, init_snapshot_path)
 
