@@ -138,7 +138,7 @@ def main(argv):
         reset_moving_averages=args.reset_moving_averages,
         optimizer_type=args.optimizer,
         #gpu_memory_fraction=0.32,  # Set how much GPU memory to reserve for the network
-        gpu_memory_fraction=1,  # increased to 1
+        gpu_memory_fraction=0.95,  # increased
         net_type=args.net_type)
     with net.graph.as_default():
         saver = tf.train.Saver()
