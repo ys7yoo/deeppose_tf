@@ -59,7 +59,7 @@ if __name__ == '__main__':
     parser.add_argument('--small_lsp_images_dir', type=str, default=os.path.join(LSP_DATASET_ROOT, 'images'))
     parser.add_argument('--small_lsp_joints_path', type=str, default=os.path.join(LSP_DATASET_ROOT, 'joints.mat'))
 
-    READ_LSP_EXT=0
+    READ_LSP_EXT=1
     if(READ_LSP_EXT):
         parser.add_argument('--output_dir', type=str, default=LSP_EXT_DATASET_ROOT)
     else:
