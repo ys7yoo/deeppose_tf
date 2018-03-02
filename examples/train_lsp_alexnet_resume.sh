@@ -33,8 +33,8 @@ python ${PROJ_ROOT}/scripts/train.py \
 --conv_lr 0.0005 \
 --fc_lr 0.0005 \
 --fix_conv_iter 10000 \
---optimizer adagrad \
---o_dir ${PROJ_ROOT}/out/lsp_alexnet_imagenet2\
+--optimizer adam \
+--o_dir ${PROJ_ROOT}/out/lsp_alexnet_imagenet3 \
 --gcn \
 --fliplr \
 --workers 4 \

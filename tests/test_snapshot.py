@@ -73,10 +73,14 @@ def main(dataset_name, snapshot_path):
         downscale_height=400
     )
 
+    print("data ready")
+
     test_iterator = iterators.MultiprocessIterator(
         test_dataset, batch_size=128,
         repeat=False, shuffle=False,
         n_processes=1, n_prefetch=1)
+
+    print("start testing")
 
     test_net(test_dataset, test_iterator, dataset_name, snapshot_path)
 

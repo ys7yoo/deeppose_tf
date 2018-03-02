@@ -121,7 +121,7 @@ def get_arguments(argv):
     parser.add_argument('--conv_lr', type=float, default=0.0005)
     parser.add_argument('--fc_lr', type=float, default=0.0005)
     parser.add_argument('--fix_conv_iter', type=int, default=0)
-    parser.add_argument('--optimizer', type=str, choices=['adagrad', 'momentum', 'sgd'], default='adagrad', )
+    parser.add_argument('--optimizer', type=str, choices=['adam', 'adagrad', 'momentum', 'sgd'], default='adagrad', )
     parser.add_argument('--resume', action='store_true', default=False, help='If you want to resume training from the snapshot. '
                                                                              'Should not be used if you want to initialize only several layers from the snapshot.')
     parser.add_argument('-s', '--snapshot', type=cast_path, help='snapshot path to use as initialization or to resume training', default=None)

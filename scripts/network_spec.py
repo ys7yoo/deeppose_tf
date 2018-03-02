@@ -7,11 +7,14 @@ from __future__ import print_function
 import tensorflow as tf
 
 
-def training_convnet(net, loss_op, fc_lr, conv_lr, optimizer_type='adagrad',
+def training_convnet(net, loss_op, fc_lr, conv_lr, optimizer_type='adam',
                      trace_gradients=False):
     with net.graph.as_default():
         print('Creating optimizer {}'.format(optimizer_type))
-        if optimizer_type == 'adagrad':
+        if optimizer_type == 'adam':
+            conv_optimizer = tf.train.AdamOptimizer(conv_lr)
+            fc_optimizer = tf.train.AdamOptimizer(fc_lr)
+        elif optimizer_type == 'adagrad':
             conv_optimizer = tf.train.AdagradOptimizer(conv_lr,
                                                        initial_accumulator_value=0.0001)
             fc_optimizer = tf.train.AdagradOptimizer(fc_lr,
