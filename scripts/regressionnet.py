@@ -94,7 +94,7 @@ def create_regression_net(n_joints=14, optimizer_type=None,
                 else:
                     raise ValueError('unknown net type {}'.format(net_type))
             else:
-                print('Restoring everything from snapshot and resuming'+init_snapshot_path)
+                print('Restoring everything from snapshot and resuming from '+init_snapshot_path)
                 saver = tf.train.Saver()
                 saver.restore(net.sess, init_snapshot_path)
 
@@ -226,7 +226,7 @@ def calculate_metric(gt_joints, predicted_joints, orig_bboxes, dataset_name, met
     if dataset_name == 'mpii':
         gt_joints = mpii.convert2canonical(gt_joints)
         predicted_joints = mpii.convert2canonical(predicted_joints)
-    else: 
+    else:
         gt_joints = lsp.convert2canonical(gt_joints)
         predicted_joints = lsp.convert2canonical(predicted_joints)
 
