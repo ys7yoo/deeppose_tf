@@ -288,8 +288,8 @@ def create_sumamry(tag, value):
     x = summary_pb2.Summary.Value(tag=tag, simple_value=value)
     return summary_pb2.Summary(value=[x])
 
-
-def evaluate_pcp(net, pose_loss_op, test_iterator, summary_writer, dataset_name, tag_prefix='test'):
+# separated into two functions!
+def predict(net, pose_loss_op, test_iterator, summary_writer, dataset_name, tag_prefix='test'):
     test_it = copy.copy(test_iterator)
     num_test_examples = len(test_it.dataset)
     num_batches = int(math.ceil(num_test_examples / test_it.batch_size))
@@ -326,6 +326,12 @@ def evaluate_pcp(net, pose_loss_op, test_iterator, summary_writer, dataset_name,
     gt_joints_is_valid = np.vstack(gt_joints_is_valid)
     predicted_joints = np.vstack(predicted_joints)
     orig_bboxes = np.vstack(orig_bboxes)
+
+    return avg_loss, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes
+
+def evaluate_pcp(net, pose_loss_op, test_iterator, summary_writer, dataset_name, tag_prefix='test'):
+
+    avg_loss, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes = predict(net, pose_loss_op, test_iterator, summary_writer, dataset_name, tag_prefix='test')
     assert predicted_joints.shape[0] == gt_joints.shape[0] == orig_bboxes.shape[0] == num_test_examples
     assert predicted_joints.shape[1] == gt_joints.shape[1] == num_joints
     assert predicted_joints.shape[2] == gt_joints.shape[2] == 2
