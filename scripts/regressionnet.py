@@ -322,16 +322,93 @@ def predict(net, pose_loss_op, test_iterator, summary_writer, dataset_name, tag_
         orig_bboxes.append(np.vstack([x['bbox'] for x in feeds[3]]))
 
     avg_loss = total_loss / num_test_examples
+    global_step = net.sess.run(net.global_iter_counter)
+
+    print('Step {} {}/pose_loss = {:.3f}'.format(global_step, tag_prefix, avg_loss))
+
     gt_joints = np.vstack(gt_joints)
     gt_joints_is_valid = np.vstack(gt_joints_is_valid)
     predicted_joints = np.vstack(predicted_joints)
     orig_bboxes = np.vstack(orig_bboxes)
 
-    return avg_loss, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes
+    return avg_loss, global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes
+
+def calc_pcp(global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes, dataset_name, tag_prefix='test'):
+    assert predicted_joints.shape[0] == gt_joints.shape[0] == orig_bboxes.shape[0] # == num_test_examples
+    assert predicted_joints.shape[1] == gt_joints.shape[1] # == num_joints
+    assert predicted_joints.shape[2] == gt_joints.shape[2] == 2
+    assert orig_bboxes.shape[1] == 4
+    if not np.all(gt_joints_is_valid):
+        raise ValueError('For testing All Ground Truth joints must be valid!')
+
+    pcp_per_stick = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
+                                     dataset_name=dataset_name,
+                                     metric_name='PCP')
+    pcp_per_part, part_names = poseevaluation.pcp.average_pcp_left_right_limbs(pcp_per_stick)
+    print_scores(global_step, pcp_per_stick, pcp_per_part, part_names, tag_prefix, 'PCP')
+
+    relaxed_pcp_per_stick = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
+                                             dataset_name=dataset_name, metric_name='RelaxedPCP')
+    relaxed_pcp_per_part, part_names = poseevaluation.pcp.average_pcp_left_right_limbs(relaxed_pcp_per_stick)
+    print_scores(global_step, relaxed_pcp_per_stick, relaxed_pcp_per_part, part_names, tag_prefix, 'RelaxedPCP')
+
+    pckh_per_joint = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
+                                      dataset_name=dataset_name, metric_name='PCKh')
+    pckh_symmetric_joints, joint_names = \
+        poseevaluation.pcp.average_pckh_symmetric_joints(dataset_name, pckh_per_joint)
+    print_pckh(dataset_name, global_step, pckh_per_joint, tag_prefix)
+    """
+    if summary_writer is not None:
+        summary_writer.add_summary(create_sumamry('{}/mPCP'.format(tag_prefix), np.mean(pcp_per_part)),
+                                   global_step=global_step)
+        # summary_writer.add_summary(create_sumamry('{}/mRelaxedPCP'.format(tag_prefix),
+        #                            np.mean(relaxed_pcp_per_part)), global_step=global_step)
+        summary_writer.add_summary(create_sumamry('{}/PCKh'.format(tag_prefix),
+                                       np.mean(pckh_per_joint)), global_step=global_step)
+        summary_writer.add_summary(create_sumamry('{}/symPCKh'.format(tag_prefix),
+                                                              np.mean(pckh_symmetric_joints)),
+                                   global_step=global_step)
+
+        summary_writer.add_summary(create_sumamry('{}/pose_loss'.format(tag_prefix), avg_loss),
+                                   global_step=global_step)
+    """
+    return pcp_per_stick, None
+
+
+
+# Keep the original code for compatibility
 
 def evaluate_pcp(net, pose_loss_op, test_iterator, summary_writer, dataset_name, tag_prefix='test'):
+    test_it = copy.copy(test_iterator)
+    num_test_examples = len(test_it.dataset)
+    num_batches = int(math.ceil(num_test_examples / test_it.batch_size))
+    num_joints = int(int(net.fc_regression.get_shape()[1]) / 2)
+    gt_joints = list()
+    gt_joints_is_valid = list()
+    predicted_joints = list()
+    orig_bboxes = list()
+    total_loss = 0.0
 
-    avg_loss, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes = predict(net, pose_loss_op, test_iterator, summary_writer, dataset_name, tag_prefix='test')
+    print(len(test_it.dataset))
+    for i, batch in tqdm(enumerate(test_it), total=num_batches):
+        feeds = batch2feeds(batch)
+        feed_dict = fill_joint_feed_dict(net,
+                                         feeds[:3],
+                                         conv_lr=0.0,
+                                         fc_lr=0.0,
+                                         phase='test')
+        pred_j, batch_loss_value = net.sess.run([net.fc_regression, pose_loss_op], feed_dict=feed_dict)
+        total_loss += batch_loss_value * len(batch)
+        gt_joints.append(feeds[1])
+        gt_joints_is_valid.append(feeds[2])
+        predicted_joints.append(pred_j.reshape(-1, num_joints, 2))
+        orig_bboxes.append(np.vstack([x['bbox'] for x in feeds[3]]))
+
+    avg_loss = total_loss / num_test_examples
+    gt_joints = np.vstack(gt_joints)
+    gt_joints_is_valid = np.vstack(gt_joints_is_valid)
+    predicted_joints = np.vstack(predicted_joints)
+    orig_bboxes = np.vstack(orig_bboxes)
     assert predicted_joints.shape[0] == gt_joints.shape[0] == orig_bboxes.shape[0] == num_test_examples
     assert predicted_joints.shape[1] == gt_joints.shape[1] == num_joints
     assert predicted_joints.shape[2] == gt_joints.shape[2] == 2
@@ -372,3 +449,5 @@ def evaluate_pcp(net, pose_loss_op, test_iterator, summary_writer, dataset_name,
         summary_writer.add_summary(create_sumamry('{}/pose_loss'.format(tag_prefix), avg_loss),
                                    global_step=global_step)
     return pcp_per_stick, None
+
+
