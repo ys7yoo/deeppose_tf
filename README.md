@@ -167,7 +167,7 @@ BBOX EXTENSION=1.5 means that the bounding box of the person was enlarged in 1.5
    
    For example, 
    ```bash
-   python tests/test_snapshot.py lsp /var/data/out/lsp_alexnet_imagenet/lsp_alexnet_imagenet/checkpoint-1000000
+   python tests/test_snapshot.py lsp /var/data/out/lsp_alexnet_imagenet/checkpoint-1000000
    ```
 
 
