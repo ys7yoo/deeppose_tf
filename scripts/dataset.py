@@ -71,6 +71,11 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         if self.should_downscale_images:
             print('Downscale images to the height {}px'.format(self.downscale_height))
         for person_num, line in tqdm(enumerate(csv.reader(open(self.csv_fn)))):
+
+            ##### for DEBUG
+            print(line[self.fname_index])
+            #####
+
             image_id = line[self.fname_index]
             img_path = os.path.join(self.img_dir, image_id)
             if image_id in self.images:
@@ -84,7 +89,9 @@ class PoseDataset(dataset_mixin.DatasetMixin):
                     image = cv.resize(image, None, fx=1.0 / self.downscale_factor[image_id],
                                       fy=1.0 / self.downscale_factor[image_id])
                 self.images[image_id] = image
-
+            ##### for DEBUG
+            print(line[self.joint_index:])
+            #####
             coords = [float(c) for c in line[self.joint_index:]]
             joints = np.array(list(zip(coords[0::2], coords[1::2])))
 
