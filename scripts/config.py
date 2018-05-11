@@ -10,7 +10,7 @@ LSP_EXT_DATASET_ROOT = os.path.expanduser('/var/data/lsp_ext')
 
 MPII_DATASET_ROOT = os.path.expanduser('/var/data/mpii')
 
-MET_DATASET_ROOT = os.path.expanduser('/var/data/MET')
+MET_DATASET_ROOT = os.path.expanduser('/var/data/MET2')
 
 #default location (old)
 #LSP_DATASET_ROOT = os.path.expanduser('~/data/lsp')
