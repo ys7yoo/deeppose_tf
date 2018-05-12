@@ -46,12 +46,20 @@ def main(dataset_name, snapshot_path):
         IMG_PATH_PREFIX = os.path.join(config.MPII_DATASET_ROOT, 'images')
         symmetric_joints = "[[12, 13], [11, 14], [10, 15], [2, 3], [1, 4], [0, 5]]"
         ignore_label = -100500
-    else:
+    elif dataset_name =='lsp':
         TEST_CV_FILEPATH = os.path.join(config.LSP_DATASET_ROOT, 'test_joints.csv')
 #        IMG_PATH_PREFIX = ''
         IMG_PATH_PREFIX = os.path.join(config.LSP_DATASET_ROOT, 'images')
         symmetric_joints = "[[8, 9], [7, 10], [6, 11], [2, 3], [1, 4], [0, 5]]"
         ignore_label = -1
+    elif dataset_name =='met':
+        print("MET")
+        TEST_CV_FILEPATH = os.path.join(config.MET_DATASET_ROOT, 'test_joints.csv')
+        IMG_PATH_PREFIX = os.path.join(config.MET_DATASET_ROOT, 'images')
+        symmetric_joints = "[[8, 9], [7, 10], [6, 11], [2, 3], [1, 4], [0, 5]]"
+        ignore_label = -1
+    else:
+        pass 
 
     print(TEST_CV_FILEPATH)
     print(IMG_PATH_PREFIX)
