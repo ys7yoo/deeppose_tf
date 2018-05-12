@@ -73,8 +73,11 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         for person_num, line in tqdm(enumerate(csv.reader(open(self.csv_fn)))):
 
             ##### for DEBUG
-            print(line[self.fname_index])
+            #print(line[self.fname_index])
             #####
+
+            # uncomment a breakpoint here for debugging
+            # import pdb; pdb.set_trace()
 
             image_id = line[self.fname_index]
             img_path = os.path.join(self.img_dir, image_id)
@@ -84,15 +87,30 @@ class PoseDataset(dataset_mixin.DatasetMixin):
                 if not os.path.exists(img_path):
                     raise IOError('File not found: {}'.format(img_path))
                 image = cv.imread(img_path)  # HWC BGR image
+                if image is None:
+                    raise IOError('Cannot open image: {}'.format(img_path))
+                    #print('Cannot open image:')
+                    #print(line[self.fname_index])
+                #try:
+                #    image.shape
+                #except AttributeError:
+                #    print('Cannot open image:')
+                #    print(line[self.fname_index])
                 if self.should_downscale_images and image.shape[0] > self.downscale_height:
                     self.downscale_factor[image_id] = float(image.shape[0]) / self.downscale_height
                     image = cv.resize(image, None, fx=1.0 / self.downscale_factor[image_id],
                                       fy=1.0 / self.downscale_factor[image_id])
                 self.images[image_id] = image
             ##### for DEBUG
-            print(line[self.joint_index:])
+            # print(line[self.joint_index:])
             #####
+            # uncomment a breakpoint here for debugging
+            # import pdb; pdb.set_trace()
+
             coords = [float(c) for c in line[self.joint_index:]]
+            # QUICK FIX 
+            coords = coords[:14*2]
+            # 
             joints = np.array(list(zip(coords[0::2], coords[1::2])))
 
             # is_valid_joints[i] = 0 if we need to ignore the i-th joint
@@ -126,6 +144,9 @@ class PoseDataset(dataset_mixin.DatasetMixin):
             valid_joints = self.get_valid_joints(joints, is_valid_joints)
             bbox = np.array(self.calc_joints_bbox(valid_joints))
 
+            # uncomment a breakpoint here for debugging
+            # import pdb; pdb.set_trace()
+
             # Ignore small label regions smaller than min_dim
             if bbox[2] < self.min_dim or bbox[3] < self.min_dim:
                 print('Skip small person')
@@ -133,6 +154,7 @@ class PoseDataset(dataset_mixin.DatasetMixin):
 
             self.joints.append((image_id, joints))
             self.info.append((is_valid_joints, bbox))
+
         print('Joints shape:', self.joints[0][1].shape)
 
     def __len__(self):
@@ -282,6 +304,7 @@ class PoseDataset(dataset_mixin.DatasetMixin):
             bbox_extension_range = self.bbox_extension_range
         if shift is None:
             shift = self.shift
+
         img_id, joints = self.joints[i]
         # print(img_id)
         image = self.images[img_id]
@@ -290,7 +313,9 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         # WARNING! Some vars can be changed by methods in-place!!!
         joints = np.array(joints)
         image = np.array(image)
+        # print(image.shape)   # (213, 170, 3)
         bbox = np.array(orig_bbox)
+
         is_valid_joints = is_valid_joints.astype(np.bool)
         for a, b in is_valid_joints:
             if a != b:
@@ -303,26 +328,36 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         if self.rotate:
             raise NotImplementedError
 
+        #print(image.shape)      # (213, 170, 3)
+        #print(valid_joints)
         image, valid_joints, bbox, bbox_origin = self.apply_cropping(image, valid_joints, bbox,
                                                         bbox_extension_range=bbox_extension_range,
                                                         shift=shift)
+        #print(image.shape)      # (131, 48, 3)
+        #print(valid_joints)
         crop_bbox = np.array(bbox)
         # shift bbox to its original position
         crop_bbox[:2] += bbox_origin
 
         check_bounds(valid_joints, *bbox, exclude_upper_bound=True)
         image, valid_joints, bbox = self.crop_reshape(image, valid_joints, bbox)
+        #print(image.shape)      # (227, 227, 3)
+        #print(valid_joints)
         check_bounds(valid_joints, *bbox, exclude_upper_bound=True)
 
         if self.fliplr and np.random.randint(0, 2) == 1:
+            #print('fliplr')
             joints[is_valid_joints] = valid_joints.reshape(-1)
             image, joints, is_valid_joints = self.apply_fliplr(image, joints, is_valid_joints)
             valid_joints = joints[is_valid_joints].reshape(-1, 2)
             check_bounds(valid_joints, *bbox, exclude_upper_bound=True)
         if self.coord_normalize:
+            #print('apply coordinate normalization')
             valid_joints, bbox = self.apply_coord_normalization(image, valid_joints)
+            #print(valid_joints)
             check_bounds(valid_joints, *bbox)
         if gcn:
+            #print('apply gcn')
             image = self.apply_gcn(image)
 
         image = np.asarray(image, dtype=np.float32)  # HWC BGR
