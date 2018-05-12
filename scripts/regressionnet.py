@@ -289,24 +289,35 @@ def create_sumamry(tag, value):
     return summary_pb2.Summary(value=[x])
 
 # separated into two functions!
-def predict(net, pose_loss_op, test_iterator, summary_writer, dataset_name, tag_prefix='test'):
-    test_it = copy.copy(test_iterator)
+def predict(net, pose_loss_op, test_dataset, batch_size, summary_writer, dataset_name, tag_prefix='test'):
+
+    # moved test iterator to here
+    # test_it = copy.copy(test_iterator)
+    from chainer import iterators
+    test_it = iterators.MultiprocessIterator(test_dataset, batch_size=batch_size,
+                                             repeat=False, shuffle=False,
+                                             n_processes=1, n_prefetch=1)
+    # http://docs.chainer.org/en/stable/reference/generated/chainer.iterators.MultiprocessIterator.html
+
+
     num_test_examples = len(test_it.dataset)
     num_batches = int(math.ceil(num_test_examples / test_it.batch_size))
     num_joints = int(int(net.fc_regression.get_shape()[1]) / 2)
+
     gt_joints = list()
     gt_joints_is_valid = list()
     predicted_joints = list()
     orig_bboxes = list()
+
     total_loss = 0.0
 
     print(len(test_it.dataset))
     for i, batch in tqdm(enumerate(test_it), total=num_batches):
 
-        # uncomment a breakpoint here for debugging
-        # import pdb; pdb.set_trace()
+        # uncomment the following breakpoint for debugging
+        import pdb; pdb.set_trace()
 
-        feeds = batch2feeds(batch)
+        feeds = batch2feeds(batch)    # (?, 227, 227, 3), (?, 14, 2), (?, 14, 2)
         feed_dict = fill_joint_feed_dict(net,
                                          feeds[:3],
                                          conv_lr=0.0,
