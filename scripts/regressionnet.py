@@ -315,7 +315,7 @@ def predict(net, pose_loss_op, test_dataset, batch_size, summary_writer, dataset
     for i, batch in tqdm(enumerate(test_it), total=num_batches):
 
         # uncomment the following breakpoint for debugging
-        import pdb; pdb.set_trace()
+        # import pdb; pdb.set_trace()
 
         feeds = batch2feeds(batch)    # (?, 227, 227, 3), (?, 14, 2), (?, 14, 2)
         feed_dict = fill_joint_feed_dict(net,
