@@ -7,13 +7,13 @@ CUDA_VISIBLE_DEVICES=${1} \
 PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH \
 python ${PROJ_ROOT}/scripts/train.py \
 --max_iter 5000000 \
---batch_size 1024 \
+--batch_size 1000 \
 --snapshot_step 10000 \
 --test_step 1000 \
 --log_step 1 \
 --train_csv_fn ${DATA_ROOT}/lsp/all_joints.csv \
---test_csv_fn ${DATA_ROOT}/lsp/test_joints.csv \
---val_csv_fn ${DATA_ROOT}/lsp/train_joints.csv \
+--test_csv_fn ${DATA_ROOT}/lsp_ext/val_joint10.csv \
+--val_csv_fn ${DATA_ROOT}/lsp_ext/val_joint10.csv \
 --img_path_prefix="" \
 --n_joints 14 \
 --seed 1701 \
