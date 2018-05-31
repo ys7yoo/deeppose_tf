@@ -80,20 +80,13 @@ def main(dataset_name, snapshot_path):
         should_downscale_images=True,
         downscale_height=400
     )
-
     print("data ready")
 
-    test_iterator = iterators.MultiprocessIterator(
-        test_dataset, batch_size=128,
-        repeat=False, shuffle=False,
-        n_processes=1, n_prefetch=1)
-
     print("start testing")
+    test_net(test_dataset, dataset_name, snapshot_path)
 
-    test_net(test_dataset, test_iterator, dataset_name, snapshot_path)
 
-
-def test_net(test_dataset, test_iterator, dataset_name, snapshot_path):
+def test_net(test_dataset, dataset_name, snapshot_path):
     if dataset_name not in ['lsp', 'mpii']:
         raise ValueError('Unknown dataset: {}'.format(dataset_name))
 
@@ -111,7 +104,10 @@ def test_net(test_dataset, test_iterator, dataset_name, snapshot_path):
         test_dataset.bbox_extension_range = (ext, ext)
 
         # predict joints
-        avg_loss, global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes = scripts.regressionnet.predict(net, pose_loss_op, test_iterator, summary_writer=None, dataset_name=dataset_name, tag_prefix='test')
+        batch_size=128
+        avg_loss, global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes = scripts.regressionnet.predict(net, pose_loss_op, test_dataset, batch_size, summary_writer=None, dataset_name=dataset_name, tag_prefix='test')
+
+        # avg_loss, global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes = scripts.regressionnet.predict(net, pose_loss_op, test_iterator, summary_writer=None, dataset_name=dataset_name, tag_prefix='test')
 
         # calc metric
         scripts.regressionnet.calc_pcp(global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes, dataset_name)
