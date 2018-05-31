@@ -139,7 +139,7 @@ def eval_pckh(dataset_name, gt_joints, predicted_joints, thresh=0.5):
 
 
 def average_pckh_symmetric_joints(dataset_name, pckh_per_joint):
-    if dataset_name not in ['mpii', 'lsp']:
+    if dataset_name not in ['mpii', 'lsp', 'met']:
         raise ValueError('Unknown dataset {}'.format(dataset_name))
 
     joint_names = ['Head', 'Neck', 'Shoulder',
