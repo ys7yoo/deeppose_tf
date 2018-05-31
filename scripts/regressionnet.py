@@ -17,6 +17,7 @@ from poseevaluation.utils import *
 #from poseevaluation.lsp import *
 from poseevaluation import lsp
 from poseevaluation import mpii
+from poseevaluation import met
 from poseevaluation.pcp import *
 
 def create_regression_net(n_joints=14, optimizer_type=None,
