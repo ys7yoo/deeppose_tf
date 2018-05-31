@@ -55,7 +55,7 @@ def main(dataset_name, snapshot_path):
     elif dataset_name =='met':
         print("MET")
         TEST_CV_FILEPATH = os.path.join(config.MET_DATASET_ROOT, 'activity.csv')
-        IMG_PATH_PREFIX = os.path.join(config.MET_DATASET_ROOT, 'images')
+        IMG_PATH_PREFIX = os.path.join(config.MET_DATASET_ROOT)
         symmetric_joints = "[[8, 9], [7, 10], [6, 11], [2, 3], [1, 4], [0, 5]]"
         ignore_label = -1
     else:
