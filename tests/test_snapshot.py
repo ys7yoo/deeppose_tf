@@ -54,7 +54,7 @@ def main(dataset_name, snapshot_path):
         ignore_label = -1
     elif dataset_name =='met':
         print("MET")
-        TEST_CV_FILEPATH = os.path.join(config.MET_DATASET_ROOT, 'test_joints.csv')
+        TEST_CV_FILEPATH = os.path.join(config.MET_DATASET_ROOT, 'activity.csv')
         IMG_PATH_PREFIX = os.path.join(config.MET_DATASET_ROOT, 'images')
         symmetric_joints = "[[8, 9], [7, 10], [6, 11], [2, 3], [1, 4], [0, 5]]"
         ignore_label = -1
@@ -87,7 +87,7 @@ def main(dataset_name, snapshot_path):
 
 
 def test_net(test_dataset, dataset_name, snapshot_path):
-    if dataset_name not in ['lsp', 'mpii']:
+    if dataset_name not in ['lsp', 'mpii', 'met']:
         raise ValueError('Unknown dataset: {}'.format(dataset_name))
 
     net, loss_op, pose_loss_op, train_op = scripts.regressionnet.create_regression_net(
