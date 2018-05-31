@@ -105,9 +105,7 @@ def test_net(test_dataset, dataset_name, snapshot_path):
 
         # predict joints
         batch_size=128
-        avg_loss, global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes = scripts.regressionnet.predict(net, pose_loss_op, test_dataset, batch_size, summary_writer=None, dataset_name=dataset_name, tag_prefix='test')
-
-        # avg_loss, global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes = scripts.regressionnet.predict(net, pose_loss_op, test_iterator, summary_writer=None, dataset_name=dataset_name, tag_prefix='test')
+        avg_loss, global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes = scripts.regressionnet.predict(net, pose_loss_op, test_dataset, batch_size, dataset_name=dataset_name, tag_prefix='test')
 
         # calc metric
         scripts.regressionnet.calc_pcp(global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes, dataset_name)
