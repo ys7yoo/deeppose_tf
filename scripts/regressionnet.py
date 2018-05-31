@@ -290,7 +290,7 @@ def create_sumamry(tag, value):
     return summary_pb2.Summary(value=[x])
 
 # separated into two functions!
-def predict(net, pose_loss_op, test_dataset, batch_size, summary_writer, dataset_name, tag_prefix='test'):
+def predict(net, pose_loss_op, test_dataset, batch_size, dataset_name, tag_prefix='test'):
 
     # moved test iterator to here
     # test_it = copy.copy(test_iterator)
@@ -345,7 +345,7 @@ def predict(net, pose_loss_op, test_dataset, batch_size, summary_writer, dataset
 
     return avg_loss, global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes
 
-def calc_pcp(global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes, dataset_name, tag_prefix='test'):
+def calc_pcp(global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_bboxes, dataset_name, tag_prefix='test', summary_writer=None):
     assert predicted_joints.shape[0] == gt_joints.shape[0] == orig_bboxes.shape[0] # == num_test_examples
     assert predicted_joints.shape[1] == gt_joints.shape[1] # == num_joints
     assert predicted_joints.shape[2] == gt_joints.shape[2] == 2
@@ -371,7 +371,8 @@ def calc_pcp(global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_
     pckh_symmetric_joints, joint_names = \
         poseevaluation.pcp.average_pckh_symmetric_joints(dataset_name, pckh_per_joint)
     print_pckh(dataset_name, global_step, pckh_per_joint, tag_prefix)
-    """
+
+
     if summary_writer is not None:
         summary_writer.add_summary(create_sumamry('{}/mPCP'.format(tag_prefix), np.mean(pcp_per_part)),
                                    global_step=global_step)
@@ -385,7 +386,7 @@ def calc_pcp(global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_
 
         summary_writer.add_summary(create_sumamry('{}/pose_loss'.format(tag_prefix), avg_loss),
                                    global_step=global_step)
-    """
+
     return pcp_per_stick, None
 
 
