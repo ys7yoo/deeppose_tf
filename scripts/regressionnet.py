@@ -355,6 +355,8 @@ def calc_pcp(global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_
     #if not np.all(gt_joints_is_valid):
     #    raise ValueError('For testing All Ground Truth joints must be valid!')
 
+    # import pdb; pdb.set_trace()
+
     pcp_per_stick = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
                                      dataset_name=dataset_name,
                                      metric_name='PCP')
@@ -429,7 +431,8 @@ def evaluate_pcp(net, pose_loss_op, test_iterator, summary_writer, dataset_name,
     assert predicted_joints.shape[2] == gt_joints.shape[2] == 2
     assert orig_bboxes.shape[1] == 4
     if not np.all(gt_joints_is_valid):
-        raise ValueError('For testing All Ground Truth joints must be valid!')
+        print('[WARNING] For testing, all Ground Truth joints must be valid!')
+        #raise ValueError('For testing All Ground Truth joints must be valid!')
     global_step = net.sess.run(net.global_iter_counter)
     print('Step {} {}/pose_loss = {:.3f}'.format(global_step, tag_prefix, avg_loss))
 
