@@ -8,7 +8,7 @@ PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH \
 python ${PROJ_ROOT}/scripts/train.py \
 --max_iter 1000000 \
 --batch_size 1080 \
---snapshot_step 10000 \
+--snapshot_step 1000 \
 --test_step 1000 \
 --log_step 1 \
 --train_csv_fn ${DATA_ROOT}/MET2/activity_wo_train_k${2}.csv \
