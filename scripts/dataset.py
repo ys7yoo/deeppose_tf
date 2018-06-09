@@ -107,20 +107,29 @@ class PoseDataset(dataset_mixin.DatasetMixin):
             # uncomment a breakpoint here for debugging
             # import pdb; pdb.set_trace()
 
-            coords = [float(c) for c in line[self.joint_index:]]
-            # QUICK FIX 
-            coords = coords[:14*2]
+            # get (x,y) coordinate of joints
+            # QUICK FIX - get first 28 numbers 
+            coords = [float(c) for c in line[self.joint_index:self.joint_index+14*2]]
+            # coords = coords[:14*2]
             # 
             joints = np.array(list(zip(coords[0::2], coords[1::2])))
 
-            # is_valid_joints[i] = 0 if we need to ignore the i-th joint
-            is_valid_joints = [0 if v == self.ignore_label else 1 for v in joints.flatten()]
-            is_valid_joints = np.array(list(zip(is_valid_joints[0::2], is_valid_joints[1::2])))
-            for i_joint, (a, b) in enumerate(is_valid_joints):
-                if a == 0 or b == 0:
-                    is_valid_joints[i_joint, :] = 0
-            # if not np.all(is_valid_joints):
-            #     print('person {} contains non-valid joints'.format(person_num))
+
+            # get valid joint info
+            valids = [bool(c) for c in line[self.joint_index+14*2:]]
+            if len(valids)>0:
+                is_valid_joints = np.array(list(zip(valids, valids)))
+            else:
+                # generate valid joint info
+
+                # is_valid_joints[i] = 0 if we need to ignore the i-th joint
+                is_valid_joints = [0 if v == self.ignore_label else 1 for v in joints.flatten()]
+                is_valid_joints = np.array(list(zip(is_valid_joints[0::2], is_valid_joints[1::2])))
+                for i_joint, (a, b) in enumerate(is_valid_joints):
+                    if a == 0 or b == 0:
+                        is_valid_joints[i_joint, :] = 0
+                # if not np.all(is_valid_joints):
+                #     print('person {} contains non-valid joints'.format(person_num))
 
             if image_id in self.downscale_factor:
                 joints /= self.downscale_factor[image_id]
