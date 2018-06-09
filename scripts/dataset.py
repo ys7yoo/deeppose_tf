@@ -132,10 +132,11 @@ class PoseDataset(dataset_mixin.DatasetMixin):
 
             if not np.all(is_valid_joints):
                 # print('person {} contains non-valid joints'.format(person_num))
-                print('person {} contains non-valid joints'.format(img_path))
-                print(joints)
-                print('valid joints:')
-                print(self.get_valid_joints(joints, is_valid_joints))
+                print('{} contains non-valid joints'.format(img_path))
+                print(is_valid_joints[:,0])
+                #print(joints)
+                #print('valid joints:')
+                #print(self.get_valid_joints(joints, is_valid_joints))
 
             if image_id in self.downscale_factor:
                 joints /= self.downscale_factor[image_id]
