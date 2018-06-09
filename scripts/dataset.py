@@ -116,10 +116,11 @@ class PoseDataset(dataset_mixin.DatasetMixin):
 
 
             # get valid joint info
-            valids = [bool(c) for c in line[self.joint_index+14*2:]]
-            if len(valids)>0:
-                is_valid_joints = np.array(list(zip(valids, valids)))
-            else:
+            #valids = [int(c) for c in line[self.joint_index+14*2:]]
+            #if len(valids)>0:
+            #    is_valid_joints = np.array(list(zip(valids, valids)))
+            #else:
+            if True:
                 # generate valid joint info
 
                 # is_valid_joints[i] = 0 if we need to ignore the i-th joint
@@ -128,8 +129,13 @@ class PoseDataset(dataset_mixin.DatasetMixin):
                 for i_joint, (a, b) in enumerate(is_valid_joints):
                     if a == 0 or b == 0:
                         is_valid_joints[i_joint, :] = 0
-                # if not np.all(is_valid_joints):
-                #     print('person {} contains non-valid joints'.format(person_num))
+
+            if not np.all(is_valid_joints):
+                # print('person {} contains non-valid joints'.format(person_num))
+                print('person {} contains non-valid joints'.format(img_path))
+                print(joints)
+                print('valid joints:')
+                print(self.get_valid_joints(joints, is_valid_joints))
 
             if image_id in self.downscale_factor:
                 joints /= self.downscale_factor[image_id]
