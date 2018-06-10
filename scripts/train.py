@@ -141,7 +141,7 @@ def main(argv):
         #gpu_memory_fraction=0.95,  # increased
         net_type=args.net_type)
     with net.graph.as_default():
-        saver = tf.train.Saver()
+        saver = tf.train.Saver(max_to_keep=None)
 
     print ('args.resume: {}\nargs.snapshot: {}'.format(args.resume, args.snapshot))
     bbox_extension_range = (args.bbox_extension_min, args.bbox_extension_max)

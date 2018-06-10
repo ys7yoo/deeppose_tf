@@ -96,7 +96,7 @@ def create_regression_net(n_joints=14, optimizer_type=None,
                     raise ValueError('unknown net type {}'.format(net_type))
             else:
                 print('Restoring everything from snapshot and resuming from '+init_snapshot_path)
-                saver = tf.train.Saver()
+                saver = tf.train.Saver(max_to_keep=None)
                 saver.restore(net.sess, init_snapshot_path)
 
         train_op = network_spec.training_convnet(net, pose_loss_op, fc_lr=fc_lr_pl,
