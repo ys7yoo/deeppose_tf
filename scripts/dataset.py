@@ -23,7 +23,7 @@ class PoseDataset(dataset_mixin.DatasetMixin):
                  shift=None,
                  min_dim=0, coord_normalize=True, gcn=True,
                  fname_index=0,
-                 joint_index=1, symmetric_joints=None, ignore_label=-1,
+                 joint_index=1, joint_index_end=28, symmetric_joints=None, ignore_label=-1,
                  should_return_bbox=False,
                  should_downscale_images=False,
                  downscale_height=480):
@@ -109,7 +109,8 @@ class PoseDataset(dataset_mixin.DatasetMixin):
 
             # get (x,y) coordinate of joints
             # QUICK FIX - get first 28 numbers 
-            coords = [float(c) for c in line[self.joint_index:self.joint_index+14*2]]
+            coords = [float(c) for c in line[self.joint_index:self.joint_index_end]]
+            #coords = [float(c) for c in line[self.joint_index:self.joint_index+14*2]]
             # coords = coords[:14*2]
             # 
             joints = np.array(list(zip(coords[0::2], coords[1::2])))
