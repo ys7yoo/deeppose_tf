@@ -227,10 +227,13 @@ def calculate_metric(gt_joints, predicted_joints, orig_bboxes, dataset_name, met
     if dataset_name == 'mpii':
         gt_joints = mpii.convert2canonical(gt_joints)
         predicted_joints = mpii.convert2canonical(predicted_joints)
-    else:
+    elif dataset_name == 'lsp':
         gt_joints = lsp.convert2canonical(gt_joints)
         predicted_joints = lsp.convert2canonical(predicted_joints)
-
+    else: # for MET with 8 point model
+        gt_joints = met.convert2canonical(gt_joints)
+        predicted_joints = met.convert2canonical(predicted_joints)
+ 
 
 #    gt_joints = poseevaluation.__dict__[dataset_name].convert2canonical(gt_joints)
 #    predicted_joints = poseevaluation.__dict__[dataset_name].convert2canonical(predicted_joints)
@@ -439,30 +442,31 @@ def evaluate_pcp(net, pose_loss_op, test_iterator, summary_writer, dataset_name,
     pcp_per_stick = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
                                      dataset_name=dataset_name,
                                      metric_name='PCP')
-    pcp_per_part, part_names = poseevaluation.pcp.average_pcp_left_right_limbs(pcp_per_stick)
-    print_scores(global_step, pcp_per_stick, pcp_per_part, part_names, tag_prefix, 'PCP')
+    #pcp_per_part, part_names = poseevaluation.pcp.average_pcp_left_right_limbs(pcp_per_stick)
+    #print_scores(global_step, pcp_per_stick, pcp_per_part, part_names, tag_prefix, 'PCP')
 
-    relaxed_pcp_per_stick = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
-                                             dataset_name=dataset_name, metric_name='RelaxedPCP')
-    relaxed_pcp_per_part, part_names = poseevaluation.pcp.average_pcp_left_right_limbs(relaxed_pcp_per_stick)
-    print_scores(global_step, relaxed_pcp_per_stick, relaxed_pcp_per_part, part_names, tag_prefix, 'RelaxedPCP')
+    #relaxed_pcp_per_stick = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
+    #                                         dataset_name=dataset_name, metric_name='RelaxedPCP')
+    #relaxed_pcp_per_part, part_names = poseevaluation.pcp.average_pcp_left_right_limbs(relaxed_pcp_per_stick)
+    #print_scores(global_step, relaxed_pcp_per_stick, relaxed_pcp_per_part, part_names, tag_prefix, 'RelaxedPCP')
 
-    pckh_per_joint = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
-                                      dataset_name=dataset_name, metric_name='PCKh')
-    pckh_symmetric_joints, joint_names = \
-        poseevaluation.pcp.average_pckh_symmetric_joints(dataset_name, pckh_per_joint)
-    print_pckh(dataset_name, global_step, pckh_per_joint, tag_prefix)
+    #pckh_per_joint = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
+    #                                  dataset_name=dataset_name, metric_name='PCKh')
+    #pckh_symmetric_joints, joint_names = \
+    #    poseevaluation.pcp.average_pckh_symmetric_joints(dataset_name, pckh_per_joint)
+    #print_pckh(dataset_name, global_step, pckh_per_joint, tag_prefix)
 
     if summary_writer is not None:
-        summary_writer.add_summary(create_sumamry('{}/mPCP'.format(tag_prefix), np.mean(pcp_per_part)),
-                                   global_step=global_step)
+        summary_writer.add_summary(create_sumamry('{}/mPCP'.format(tag_prefix), np.mean(pcp_per_stick)), global_step=global_step)
+        #summary_writer.add_summary(create_sumamry('{}/mPCP'.format(tag_prefix), np.mean(pcp_per_part)),
+        #                           global_step=global_step)
         # summary_writer.add_summary(create_sumamry('{}/mRelaxedPCP'.format(tag_prefix),
         #                            np.mean(relaxed_pcp_per_part)), global_step=global_step)
-        summary_writer.add_summary(create_sumamry('{}/PCKh'.format(tag_prefix),
-                                       np.mean(pckh_per_joint)), global_step=global_step)
-        summary_writer.add_summary(create_sumamry('{}/symPCKh'.format(tag_prefix),
-                                                              np.mean(pckh_symmetric_joints)),
-                                   global_step=global_step)
+        #summary_writer.add_summary(create_sumamry('{}/PCKh'.format(tag_prefix),
+        #                               np.mean(pckh_per_joint)), global_step=global_step)
+        #summary_writer.add_summary(create_sumamry('{}/symPCKh'.format(tag_prefix),
+        #                                                      np.mean(pckh_symmetric_joints)),
+        #                           global_step=global_step)
 
         summary_writer.add_summary(create_sumamry('{}/pose_loss'.format(tag_prefix), avg_loss),
                                    global_step=global_step)

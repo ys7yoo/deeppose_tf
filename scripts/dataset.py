@@ -23,7 +23,7 @@ class PoseDataset(dataset_mixin.DatasetMixin):
                  shift=None,
                  min_dim=0, coord_normalize=True, gcn=True,
                  fname_index=0,
-                 joint_index=1, symmetric_joints=None, ignore_label=-1,
+                 joint_index=1, joint_index_end=29, symmetric_joints=None, ignore_label=-1,
                  should_return_bbox=False,
                  should_downscale_images=False,
                  downscale_height=480):
@@ -107,20 +107,37 @@ class PoseDataset(dataset_mixin.DatasetMixin):
             # uncomment a breakpoint here for debugging
             # import pdb; pdb.set_trace()
 
-            coords = [float(c) for c in line[self.joint_index:]]
-            # QUICK FIX 
-            coords = coords[:14*2]
+            # get (x,y) coordinate of joints
+            # QUICK FIX - get first 28 numbers 
+            coords = [float(c) for c in line[self.joint_index:self.joint_index_end]]
+            #coords = [float(c) for c in line[self.joint_index:self.joint_index+14*2]]
+            # coords = coords[:14*2]
             # 
             joints = np.array(list(zip(coords[0::2], coords[1::2])))
 
-            # is_valid_joints[i] = 0 if we need to ignore the i-th joint
-            is_valid_joints = [0 if v == self.ignore_label else 1 for v in joints.flatten()]
-            is_valid_joints = np.array(list(zip(is_valid_joints[0::2], is_valid_joints[1::2])))
-            for i_joint, (a, b) in enumerate(is_valid_joints):
-                if a == 0 or b == 0:
-                    is_valid_joints[i_joint, :] = 0
-            # if not np.all(is_valid_joints):
-            #     print('person {} contains non-valid joints'.format(person_num))
+
+            # get valid joint info
+            #valids = [int(c) for c in line[self.joint_index+14*2:]]
+            #if len(valids)>0:
+            #    is_valid_joints = np.array(list(zip(valids, valids)))
+            #else:
+            if True:
+                # generate valid joint info
+
+                # is_valid_joints[i] = 0 if we need to ignore the i-th joint
+                is_valid_joints = [0 if v == self.ignore_label else 1 for v in joints.flatten()]
+                is_valid_joints = np.array(list(zip(is_valid_joints[0::2], is_valid_joints[1::2])))
+                for i_joint, (a, b) in enumerate(is_valid_joints):
+                    if a == 0 or b == 0:
+                        is_valid_joints[i_joint, :] = 0
+
+            if not np.all(is_valid_joints):
+                # print('person {} contains non-valid joints'.format(person_num))
+                print('{} contains non-valid joints'.format(img_path))
+                print(is_valid_joints[:,0])
+                #print(joints)
+                #print('valid joints:')
+                #print(self.get_valid_joints(joints, is_valid_joints))
 
             if image_id in self.downscale_factor:
                 joints /= self.downscale_factor[image_id]

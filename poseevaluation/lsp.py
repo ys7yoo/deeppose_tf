@@ -21,13 +21,11 @@ The canonical joint order for LSP dataset:
 """
 
 NUM_JOINTS = 14
-CANONICAL_JOINT_NAMES = ['Head', 'Neck', 'R Shoulder',
-                         'R elbow', 'R wrist',
+CANONICAL_JOINT_NAMES = ['Head', 'Neck',
+                         'R Shoulder', 'R elbow', 'R wrist',
                          'R hip', 'R knee', 'R ankle',
-                         'L shoulder', 'L elbow',
-                         'L wrist', 'L hip',
-                         'L knee', 'L ankle']
-
+                         'L shoulder', 'L elbow', 'L wrist',
+                         'L hip','L knee', 'L ankle']
 
 def joints2sticks(joints):
     """
