@@ -39,8 +39,8 @@ def eval_relaxed_pcp(gt_joints, predicted_joints, thresh=0.5):
     num_examples = len(gt_joints)
     # the number of sticks for a pose
     num_sticks = gt_joints[0]['sticks'].shape[0]
-    if num_sticks != 10:
-        raise ValueError('PCP requires 10 sticks. Provided: {}'.format(num_sticks))
+    #if num_sticks != 10:
+    #    raise ValueError('PCP requires 10 sticks. Provided: {}'.format(num_sticks))
     is_matched = np.zeros((num_examples, num_sticks), dtype=int)
 
     for i in range(num_examples):
@@ -76,8 +76,8 @@ def eval_strict_pcp(gt_joints, predicted_joints, thresh=0.5):
     num_examples = len(gt_joints)
     # the number of sticks for a pose
     num_sticks = gt_joints[0]['sticks'].shape[0]
-    if num_sticks != 10:
-        raise ValueError('PCP requires 10 sticks. Provided: {}'.format(num_sticks))
+    #if num_sticks != 10:
+    #    raise ValueError('PCP requires 10 sticks. Provided: {}'.format(num_sticks))
     is_matched = np.zeros((num_examples, num_sticks), dtype=int)
 
     for i in range(num_examples):
