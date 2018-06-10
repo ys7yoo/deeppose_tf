@@ -138,7 +138,7 @@ def main(argv):
         reset_moving_averages=args.reset_moving_averages,
         optimizer_type=args.optimizer,
         #gpu_memory_fraction=0.32,  # Set how much GPU memory to reserve for the network
-        gpu_memory_fraction=0.95,  # increased
+        #gpu_memory_fraction=0.95,  # increased
         net_type=args.net_type)
     with net.graph.as_default():
         saver = tf.train.Saver()
@@ -162,7 +162,7 @@ def main(argv):
         coord_normalize=args.coord_normalize,
         gcn=args.gcn,
         fname_index=args.fname_index,
-        joint_index=args.joint_index,
+        joint_index=args.joint_index, joint_index_end=29,
         symmetric_joints=args.symmetric_joints,
         ignore_label=args.ignore_label,
         should_downscale_images=args.should_downscale_images,
@@ -176,7 +176,7 @@ def main(argv):
         coord_normalize=args.coord_normalize,
         gcn=args.gcn,
         fname_index=args.fname_index,
-        joint_index=args.joint_index,
+        joint_index=args.joint_index, joint_index_end=29,
         symmetric_joints=args.symmetric_joints,
         ignore_label=args.ignore_label,
         should_return_bbox=True,

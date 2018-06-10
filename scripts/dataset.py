@@ -23,7 +23,7 @@ class PoseDataset(dataset_mixin.DatasetMixin):
                  shift=None,
                  min_dim=0, coord_normalize=True, gcn=True,
                  fname_index=0,
-                 joint_index=1, joint_index_end=28, symmetric_joints=None, ignore_label=-1,
+                 joint_index=1, joint_index_end=29, symmetric_joints=None, ignore_label=-1,
                  should_return_bbox=False,
                  should_downscale_images=False,
                  downscale_height=480):
