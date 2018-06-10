@@ -105,6 +105,9 @@ def get_arguments(argv):
         '--joint_index', type=int, default=1,
         help='the start index of joint values in a csv line')
     parser.add_argument(
+        '--joint_index_end', type=int, default=1,
+        help='the end index of joint values in a csv line')
+    parser.add_argument(
         '--symmetric_joints', type=str, default='[[8, 9], [7, 10], [6, 11], [2, 3], [1, 4], [0, 5]]',
         help='Symmetric joint ids in JSON format')
     # flic_swap_joints = [(2, 4), (1, 5), (0, 6)]
