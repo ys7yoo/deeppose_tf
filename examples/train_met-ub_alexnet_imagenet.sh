@@ -8,7 +8,7 @@ PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH \
 python ${PROJ_ROOT}/scripts/train.py \
 --max_iter 200000 \
 --batch_size 128 \
---snapshot_step 5000 \
+--snapshot_step 1000 \
 --test_step 1000 \
 --log_step 1 \
 --train_csv_fn ${DATA_ROOT}/MET2/activity_wo_ub_train.csv \
@@ -32,7 +32,7 @@ python ${PROJ_ROOT}/scripts/train.py \
 --fc_lr 0.0005 \
 --fix_conv_iter 10000 \
 --optimizer adam \
---o_dir ${PROJ_ROOT}/out/met-ub_all_alexnet_imagenet \
+--o_dir ${PROJ_ROOT}/out/met-ub_alexnet_imagenet \
 --gcn \
 --fliplr \
 --workers 8 \
