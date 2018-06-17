@@ -173,6 +173,15 @@ def batch2feeds_flip(batch):
     images_flipped = list()
     joints_gt_flipped = joints_gt
     
+
+    # cleaner code using zip
+    for image, joint in zip(images, joints_gt_flipped):
+        # flip image (horizontally)
+        images_flipped.append(cv.flip(image,1))
+        # flip joints by inverting x coordinate
+        joint[:,0]  = -joint[:,0]
+ 
+    """
     for i in range(num_images):
         image = images[i]
     #for i, image in tqdm(enumerate(images), total=num_images):
@@ -180,6 +189,7 @@ def batch2feeds_flip(batch):
         images_flipped.append(cv.flip(image,1))
         # flip joints by inverting x coordinate
         joints_gt_flipped[i][:,0]  = -joints_gt_flipped[i][:,0]
+    """
 
     images = np.asarray(images)
     joints_gt = np.asarray(joints_gt)
