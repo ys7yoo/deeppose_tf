@@ -167,7 +167,7 @@ def batch2feeds_flip(batch):
 
 #    import pdb; pdb.set_trace()
 
-    print ('generate flipped images')
+    #print ('generate flipped images')
 
     num_images = len(images)
     images_flipped = list()
