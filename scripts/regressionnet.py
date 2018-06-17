@@ -8,6 +8,8 @@ import math
 import time
 from tqdm import tqdm
 
+import cv2 as cv # for flipping images
+
 #from . import alexnet
 from scripts import alexnet
 #from . import network_spec
@@ -146,6 +148,51 @@ def batch2feeds(batch):
     images = np.asarray(images)
     joints_gt = np.asarray(joints_gt)
     joints_is_valid = np.asarray(joints_is_valid)
+    return images, joints_gt, joints_is_valid, misc
+
+
+def batch2feeds_flip(batch):
+    """
+    Args:
+      batch: a batch that is returned by dataset_iterator,
+      which is a list of tuples (image, img_joints_gt, img_joints_is_valid)
+    Return:
+        images: float32 array [batch_size x H x W x C]
+        joints_gt: joints coordinates float32 array [batch_size x n_joints x 2]
+        joints_is_valid: is joint valid float32 array [batch_size x n_joints x 2]
+        misc: list of misc data for examples
+    """
+
+    images, joints_gt, joints_is_valid, misc = zip(*batch)
+
+#    import pdb; pdb.set_trace()
+
+    print ('generate flipped images')
+
+    num_images = len(images)
+    images_flipped = list()
+    joints_gt_flipped = joints_gt
+    
+    for i in range(num_images):
+        image = images[i]
+    #for i, image in tqdm(enumerate(images), total=num_images):
+        # flip image (horizontally)
+        images_flipped.append(cv.flip(image,1))
+        # flip joints by inverting x coordinate
+        joints_gt_flipped[i][:,0]  = -joints_gt_flipped[i][:,0]
+
+    images = np.asarray(images)
+    joints_gt = np.asarray(joints_gt)
+    joints_is_valid = np.asarray(joints_is_valid)
+
+#    import pdb; pdb.set_trace()
+
+    # append flipped images
+    images = np.append(images, images_flipped, axis=0)
+    joints_gt = np.append(joints_gt, joints_gt_flipped, axis=0)
+    joints_is_valid = np.append(joints_is_valid, joints_is_valid, axis=0)
+
+
     return images, joints_gt, joints_is_valid, misc
 
 

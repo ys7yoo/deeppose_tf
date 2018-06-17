@@ -85,11 +85,19 @@ def train_loop(net, saver, loss_op, pose_loss_op, train_op, dataset_name, train_
 
         # training
         start_time = time.time()
+
         feed_dict = regressionnet.fill_joint_feed_dict(net,
-                                                       regressionnet.batch2feeds(train_iterator.next())[:3],
+                                                       regressionnet.batch2feeds_flip(train_iterator.next())[:3],
                                                        conv_lr=conv_lr,
                                                        fc_lr=fc_lr,
                                                        phase='train')
+ 
+
+        #feed_dict = regressionnet.fill_joint_feed_dict(net,
+        #                                               regressionnet.batch2feeds(train_iterator.next())[:3],
+        #                                               conv_lr=conv_lr,
+        #                                               fc_lr=fc_lr,
+        #                                               phase='train')
         if step < fix_conv_iter:
             feed_dict['lr/conv_lr:0'] = 0.0
 
