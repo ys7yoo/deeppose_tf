@@ -10,7 +10,7 @@ python ${PROJ_ROOT}/scripts/train.py \
 --batch_size 128 \
 --snapshot_step 10000 \
 --test_step 10000 \
---log_step 100 \
+--log_step 10 \
 --train_csv_fn ${DATA_ROOT}/MET2/activity_wo_ub_train.csv \
 --val_csv_fn ${DATA_ROOT}/MET2/activity_wo_ub_test.csv \
 --test_csv_fn ${DATA_ROOT}/MET2/activity_wo_ub_test.csv \
