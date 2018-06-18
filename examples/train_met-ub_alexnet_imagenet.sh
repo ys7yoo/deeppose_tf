@@ -11,9 +11,9 @@ python ${PROJ_ROOT}/scripts/train.py \
 --snapshot_step 10000 \
 --test_step 10000 \
 --log_step 10 \
---train_csv_fn ${DATA_ROOT}/MET2/activity_wo_ub_train.csv \
---val_csv_fn ${DATA_ROOT}/MET2/activity_wo_ub_test.csv \
---test_csv_fn ${DATA_ROOT}/MET2/activity_wo_ub_test.csv \
+--train_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_train.csv \
+--val_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_test.csv \
+--test_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_test.csv \
 --img_path_prefix=${DATA_ROOT}/MET2 \
 --n_joints 8 \
 --seed 1701 \
@@ -32,7 +32,7 @@ python ${PROJ_ROOT}/scripts/train.py \
 --fc_lr 0.0005 \
 --fix_conv_iter 10000 \
 --optimizer adam \
---o_dir ${PROJ_ROOT}/out/met-ub_flip_alexnet_imagenet \
+--o_dir ${PROJ_ROOT}/out/met_n10_ub_alexnet_imagenet \
 --gcn \
 --fliplr \
 --workers 8 \
