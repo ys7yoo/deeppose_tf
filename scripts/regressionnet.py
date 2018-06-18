@@ -65,7 +65,7 @@ def create_regression_net(n_joints=14, optimizer_type=None,
         num_valid_joints = tf.reduce_sum(joints_is_valid_flat,
                                          axis=1) / tf.constant(2.0, dtype=tf.float32)
         pose_loss_op = tf.reduce_mean(
-            tf.reduce_sum(tf.pow(diff_valid, 2), axis=1) / num_valid_joints,
+            tf.reduce_sum(tf.square(diff_valid), axis=1) / num_valid_joints,
             name='joint_euclidean_loss')
 
         l2_loss = tf.add_n([tf.nn.l2_loss(v) for v in tf.trainable_variables()])
