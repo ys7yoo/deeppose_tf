@@ -9,7 +9,7 @@ python ${PROJ_ROOT}/scripts/train.py \
 --max_iter 200000 \
 --batch_size 128 \
 --snapshot_step 10000 \
---test_step 10000 \
+--test_step 1000 \
 --log_step 10 \
 --train_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_train.csv \
 --val_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_test.csv \
