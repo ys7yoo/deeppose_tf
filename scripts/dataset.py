@@ -14,7 +14,6 @@ import math
 import warnings
 from tqdm import tqdm
 
-
 class PoseDataset(dataset_mixin.DatasetMixin):
 
     def __init__(self, csv_fn, img_dir, im_size, fliplr=False,
@@ -82,6 +81,7 @@ class PoseDataset(dataset_mixin.DatasetMixin):
             image_id = line[self.fname_index]
             img_path = os.path.join(self.img_dir, image_id)
             if image_id in self.images:
+                print("[WARNING] duplicated image: {} in {}".format(image_id,person_num))
                 image = self.images[image_id]
             else:
                 if not os.path.exists(img_path):
@@ -100,7 +100,6 @@ class PoseDataset(dataset_mixin.DatasetMixin):
                     self.downscale_factor[image_id] = float(image.shape[0]) / self.downscale_height
                     image = cv.resize(image, None, fx=1.0 / self.downscale_factor[image_id],
                                       fy=1.0 / self.downscale_factor[image_id])
-                self.images[image_id] = image
             ##### for DEBUG
             # print(line[self.joint_index:])
             #####
@@ -131,11 +130,18 @@ class PoseDataset(dataset_mixin.DatasetMixin):
                     if a == 0 or b == 0:
                         is_valid_joints[i_joint, :] = 0
 
+            if not np.any(is_valid_joints): # no valid joints
+                #print("No valid joint in {}".format(image_id))
+                print("No valid joint in {}{}{}".format(image_id,joints,is_valid_joints))
+                #should_skip_joints = True
+                continue
+
             if not np.all(is_valid_joints):
                 # print('person {} contains non-valid joints'.format(person_num))
-                print('{} contains non-valid joints'.format(img_path))
+                print('[{}] {} contains non-valid joints'.format(person_num, img_path))
                 print(is_valid_joints[:,0])
-                #print(joints)
+                print(joints)
+
                 #print('valid joints:')
                 #print(self.get_valid_joints(joints, is_valid_joints))
 
@@ -149,15 +155,18 @@ class PoseDataset(dataset_mixin.DatasetMixin):
                 if np.all(is_valid_joints[i_joint]):
                     if joints[i_joint][0] - image_shape[1] > 3 or \
                        joints[i_joint][1] - image_shape[0] > 3:
-                        warnings.warn('Skipping joint with incorrect joints coordinates. They are out of the image.\n'
+                        #warnings.warn('Skipping joint with incorrect joints coordinates. They are out of the image.\n'
+                        print('Skipping joint with incorrect joints coordinates. They are out of the image.\n'
                                          'image: {}, joint: {}, im.shape: {}'.format(img_path, joints[i_joint], image_shape[:2]))
                         should_skip_joints = True
                         break
                     else:
                         joints[i_joint][0] = np.clip(joints[i_joint][0], 0, image_shape[1])
                         joints[i_joint][1] = np.clip(joints[i_joint][1], 0, image_shape[0])
+
             if should_skip_joints:
                 continue
+
             valid_joints = self.get_valid_joints(joints, is_valid_joints)
             bbox = np.array(self.calc_joints_bbox(valid_joints))
 
@@ -166,8 +175,14 @@ class PoseDataset(dataset_mixin.DatasetMixin):
 
             # Ignore small label regions smaller than min_dim
             if bbox[2] < self.min_dim or bbox[3] < self.min_dim:
-                print('Skip small person')
+                print('Skip small person in {}'.format(image_id))
                 continue
+
+            ###################################################
+            # now save image and joints
+
+            # store image to dict 
+            self.images[image_id] = image
 
             self.joints.append((image_id, joints))
             self.info.append((is_valid_joints, bbox))
