@@ -6,13 +6,13 @@ DATA_ROOT=/var/data
 CUDA_VISIBLE_DEVICES=${1} \
 PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH \
 python ${PROJ_ROOT}/scripts/train.py \
---max_iter 200000 \
+--max_iter 500000 \
 --batch_size 128 \
 --snapshot_step 10000 \
 --test_step 1000 \
 --log_step 10 \
 --train_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_train.csv \
---val_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_test.csv \
+--val_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_train.csv \
 --test_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_test.csv \
 --img_path_prefix=${DATA_ROOT}/MET2 \
 --n_joints 8 \
@@ -32,7 +32,7 @@ python ${PROJ_ROOT}/scripts/train.py \
 --fc_lr 0.0005 \
 --fix_conv_iter 10000 \
 --optimizer adam \
---o_dir ${PROJ_ROOT}/out/met_n10_ub_alexnet_imagenet \
+--o_dir ${PROJ_ROOT}/out/met_n10_ub_alexnet_imagenet_gpu${1} \
 --gcn \
 --fliplr \
 --workers 8 \
