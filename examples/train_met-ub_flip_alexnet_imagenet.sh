@@ -32,7 +32,7 @@ python ${PROJ_ROOT}/scripts/train.py \
 --fc_lr 0.0005 \
 --fix_conv_iter 10000 \
 --optimizer adam \
---o_dir ${PROJ_ROOT}/out/met_n10_ub_flip_alexnet_imagenet \
+--o_dir ${PROJ_ROOT}/out/met_n10_ub_flip_alexnet_imagenet_${1} \
 --gcn \
 --workers 8 \
 --net_type Alexnet \
