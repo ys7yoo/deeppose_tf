@@ -61,6 +61,52 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         h = rb[1] - lt[1]
         return x, y, w, h
 
+
+    def augmentByFlip(self):
+        numImages = len(self)
+
+        for i in range (numImages):
+            # get joints & info
+            image_id, joints = self.joints[i]
+            is_valid_joints, bbox = self.info[i]
+            #print(image_id, joints, is_valid_joints, bbox)
+            #print(bbox)
+
+            # get image
+            image = self.images[image_id]
+
+            H, W, C = image.shape
+            #print(W,H,C)
+
+            # flip image
+            image_flipped=cv.flip(image,1)
+            #plt.imshow(image_flipped)
+
+            # flip joints
+            joints_flipped = joints.copy()
+            #joints_flipped[:,0] = W + 1 - joints_flipped[:,0]
+            joints_flipped[:,0] = W - 1 - joints_flipped[:,0]
+
+            is_valid_joints_flipped = is_valid_joints.copy()
+
+            # swap symmetric joints
+            for i, j in self.symmetric_joints:
+                joints_flipped[i], joints_flipped[j] = joints_flipped[j].copy(), joints_flipped[i].copy()
+                is_valid_joints_flipped[i], is_valid_joints_flipped[j] = is_valid_joints_flipped[j].copy(), is_valid_joints_flipped[i].copy()
+
+            # flip bbox
+            bbox_flipped = bbox.copy()
+            # bbox_flipped[0] = W + 1 - (bbox_flipped[0] + bbox_flipped[2])
+            bbox_flipped[0] = W - 1 - (bbox_flipped[0] + bbox_flipped[2])
+
+            # add to the self
+            image_id_flipped = image_id+'_FLR'
+            self.images[image_id_flipped] = image_flipped
+
+            self.joints.append((image_id_flipped, joints_flipped))
+            self.info.append((is_valid_joints, bbox_flipped))
+
+
     def load_images(self):
         self.images = dict()
         self.joints = list()
@@ -113,7 +159,6 @@ class PoseDataset(dataset_mixin.DatasetMixin):
             # coords = coords[:14*2]
             # 
             joints = np.array(list(zip(coords[0::2], coords[1::2])))
-
 
             # get valid joint info
             #valids = [int(c) for c in line[self.joint_index+14*2:]]
@@ -181,13 +226,15 @@ class PoseDataset(dataset_mixin.DatasetMixin):
             ###################################################
             # now save image and joints
 
-            # store image to dict 
+            # store image to dict
             self.images[image_id] = image
 
             self.joints.append((image_id, joints))
             self.info.append((is_valid_joints, bbox))
+            #print('stored {},{},{},{}'.format(image_id,joints, is_valid_joints, bbox))
 
-        print('Joints shape:', self.joints[0][1].shape)
+        print('{} images loaded'.format(len(self)))
+        print('joints shape:', self.joints[0][1].shape)
 
     def __len__(self):
         return len(self.joints)

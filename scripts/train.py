@@ -176,6 +176,10 @@ def main(argv):
         should_downscale_images=args.should_downscale_images,
         downscale_height=args.downscale_height
     )
+  
+    # augment the training data set by horizontal flip (2018. 6. 21)
+    train_dataset.augmentByFlip()
+
     test_dataset = dataset.PoseDataset(
         args.test_csv_fn, args.img_path_prefix, args.im_size,
         fliplr=False, rotate=False,
