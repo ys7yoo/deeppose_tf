@@ -176,7 +176,12 @@ def main(argv):
         should_downscale_images=args.should_downscale_images,
         downscale_height=args.downscale_height
     )
-  
+
+
+    # augment the training data set by horizontal flip (2018. 6. 25)
+    train_dataset.augmentByRotation((-5,5))
+    #train_dataset.augmentByRotation((-10,-5,5,10))
+ 
     # augment the training data set by horizontal flip (2018. 6. 21)
     train_dataset.augmentByFlip()
 

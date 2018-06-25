@@ -14,6 +14,10 @@ import math
 import warnings
 from tqdm import tqdm
 
+from tools import augment
+
+from matplotlib import pyplot as plt
+
 class PoseDataset(dataset_mixin.DatasetMixin):
 
     def __init__(self, csv_fn, img_dir, im_size, fliplr=False,
@@ -61,6 +65,57 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         h = rb[1] - lt[1]
         return x, y, w, h
 
+    def augmentByRotation(self, degrees):
+        numImages = len(self)
+
+        for i in range (numImages):
+            # get joints & info
+            image_id, joints = self.joints[i]
+            is_valid_joints, bbox = self.info[i]
+            #print(image_id, joints, is_valid_joints, bbox)
+            #print(bbox)
+
+            # get image
+            image = self.images[image_id]
+
+            # find center 
+            if joints.shape[0] == 14: # full model
+                # check needed joints are valid
+
+                # center = center of torso
+                center_hip = np.mean(joints[2:4,:],axis=0)
+                #print(center_hip)
+                center =  (center_hip + joints[12,:]) * 0.5
+                #print(center)
+            else:
+                # center = neck
+                # check needed joints are valid
+
+                center= joints[6,:] # neck
+                #print(center)
+
+            for degree in degrees:
+                # rotate image and joints 
+                image_rotated, joints_rotated, is_valid_joints_rotated = augment.rotate_image_and_joints(image, joints, is_valid_joints, center, degree)
+
+
+                # check all the joints are inside the image
+                if not np.all(is_valid_joints_rotated):
+                    print('Not all points are valid. Skip the rotated image.')
+                    continue
+
+                # re-calc bbox
+                valid_joints_rotated = self.get_valid_joints(joints_rotated, is_valid_joints_rotated)
+                bbox_rotated = np.array(self.calc_joints_bbox(valid_joints_rotated))
+                
+                # add to the self
+                image_id_rotated = image_id+'_R{}'.format(degree)
+                self.images[image_id_rotated] = image_rotated
+
+                self.joints.append((image_id_rotated, joints_rotated))
+                self.info.append((is_valid_joints_rotated, bbox_rotated))
+
+
 
     def augmentByFlip(self):
         numImages = len(self)
@@ -75,6 +130,11 @@ class PoseDataset(dataset_mixin.DatasetMixin):
             # get image
             image = self.images[image_id]
 
+            image_flipped, joints_flipped, is_valid_joints_flipped, bbox_flipped = augment.flip_image_and_joints(image, joints, is_valid_joints, self.symmetric_joints, bbox)
+
+
+            # below code is moved to tools/augment.py
+            """
             H, W, C = image.shape
             #print(W,H,C)
 
@@ -98,13 +158,14 @@ class PoseDataset(dataset_mixin.DatasetMixin):
             bbox_flipped = bbox.copy()
             # bbox_flipped[0] = W + 1 - (bbox_flipped[0] + bbox_flipped[2])
             bbox_flipped[0] = W - 1 - (bbox_flipped[0] + bbox_flipped[2])
+            """
 
             # add to the self
             image_id_flipped = image_id+'_FLR'
             self.images[image_id_flipped] = image_flipped
 
             self.joints.append((image_id_flipped, joints_flipped))
-            self.info.append((is_valid_joints, bbox_flipped))
+            self.info.append((is_valid_joints_flipped, bbox_flipped))
 
 
     def load_images(self):
@@ -113,8 +174,8 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         self.info = list()
         self.downscale_factor = dict()
         print('Reading dataset from {}'.format(self.csv_fn))
-        if self.should_downscale_images:
-            print('Downscale images to the height {}px'.format(self.downscale_height))
+        #if self.should_downscale_images:
+        #    print('Downscale images to the height {}px'.format(self.downscale_height))
         for person_num, line in tqdm(enumerate(csv.reader(open(self.csv_fn)))):
 
             ##### for DEBUG
@@ -143,6 +204,7 @@ class PoseDataset(dataset_mixin.DatasetMixin):
                 #    print('Cannot open image:')
                 #    print(line[self.fname_index])
                 if self.should_downscale_images and image.shape[0] > self.downscale_height:
+                    print('Downscale {} to the height {}px'.format(image_id, self.downscale_height))
                     self.downscale_factor[image_id] = float(image.shape[0]) / self.downscale_height
                     image = cv.resize(image, None, fx=1.0 / self.downscale_factor[image_id],
                                       fy=1.0 / self.downscale_factor[image_id])
@@ -352,6 +414,18 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         joints -= bbox_origin
         bbox = np.array([0, 0, w, h], dtype=int)
         return image, joints, bbox, bbox_origin
+
+    
+    def get_image_and_joints(self, imageIdx):
+        image=self.get_original_image(imageIdx)    
+        image_id, joints = self.joints[imageIdx]
+        is_valid_joints, bbox = self.info[imageIdx]
+        # print(image_id, joints, is_valid_joints, bbox)
+        
+        return image, joints, is_valid_joints
+        #plt.imshow(image[:,:,::-1])
+        #plt.plot(joints[:,0], joints[:,1], 'or')
+
 
     def get_original_image(self, i):
         """
