@@ -133,6 +133,41 @@ def parseMET(df, activity_MET):
 
     return df, METs, counts
 
+
+def parseActivity(df, activity_dict, colName='label'):
+    """
+    parse activity name, find corresponding value(MET or label), and save it to a  column
+    """
+
+    ID=df["ID"]
+
+    df[colName] = np.NaN
+
+    # list to save info for each class
+    values = list()
+    counts = list()
+
+    for act in activity_dict:
+
+        val = activity_dict[act]
+        values.append(val)
+
+        idx = ID.str.contains(act)
+        df[colName][idx] = val
+
+        count = sum(idx)
+        counts.append(count)
+        print("{} : {}}={}, {} samples".format(act,colName, val,count))
+
+
+    # drop na
+    df.dropna(inplace=True)
+    df.reset_index(drop=True, inplace=True)    # MUST RE-INDEX AFTER DROPNA!!!
+
+    return df, values, counts
+
+
+"""
 def parseClassLabel(df, activity_MET):
     """
     parse class label
@@ -162,3 +197,4 @@ def parseClassLabel(df, activity_MET):
     # df.info()
 
     return df, labels, counts
+"""
