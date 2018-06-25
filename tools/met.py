@@ -101,40 +101,8 @@ def generate_activity_label_dict(numClass=16):
     return OrderedDict(sorted(activity_label.items(), key=lambda t: t[1]))
 
 
-def parseMET(df, activity_MET):
-    """
-    parse activity name, find corresponding MET, and save it to "MET" column
-    """
 
-    ID=df["ID"]
-
-    df['MET'] = np.NaN
-
-    # list to save info for each class
-    METs = list()
-    counts = list()
-
-    for act in activity_MET:
-
-        met = activity_MET[act]
-        METs.append(met)
-
-        idx = ID.str.contains(act)
-        df["MET"][idx] = met
-
-        count = sum(idx)
-        counts.append(count)
-        print("{} : MET={}, {} samples".format(act,met,count))
-
-
-    # drop na
-    df.dropna(inplace=True)
-    df.reset_index(drop=True, inplace=True)    # MUST RE-INDEX AFTER DROPNA!!!
-
-    return df, METs, counts
-
-
-def parseActivity(df, activity_dict, colName='label'):
+def parseActivity(df, activity_dict, colName='MET', category=False):
     """
     parse activity name, find corresponding value(MET or label), and save it to a  column
     """
@@ -157,44 +125,14 @@ def parseActivity(df, activity_dict, colName='label'):
 
         count = sum(idx)
         counts.append(count)
-        print("{} : {}}={}, {} samples".format(act,colName, val,count))
+        print("{} : {} = {}, {} samples".format(act, colName, val,count))
 
 
     # drop na
     df.dropna(inplace=True)
     df.reset_index(drop=True, inplace=True)    # MUST RE-INDEX AFTER DROPNA!!!
 
+    if category:
+        df[colName] = df[colName].astype('int').astype('category')
+
     return df, values, counts
-
-
-"""
-def parseClassLabel(df, activity_MET):
-    """
-    parse class label
-    """
-
-    ID=df["ID"]
-    df['label'] = np.NaN
-
-
-    label = 0
-    labels = list()
-    counts = list()
-    for act in activity_MET:
-        idx = ID.str.contains(act)
-
-        df["label"][idx] = int(label)
-        labels.append(label)
-
-        count = sum(idx)
-        counts.append(count)
-        print("{} : label={}, {} samples".format(act,label,count))
-
-        label = label + 1
-
-
-    df["label"] = df["label"].astype('int').astype('category')
-    # df.info()
-
-    return df, labels, counts
-"""
