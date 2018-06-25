@@ -159,6 +159,8 @@ def main(argv):
     else:
         test_bbox_extension_range = (bbox_extension_range[1], bbox_extension_range[1])
 
+    ###########################################################################
+    # prepare training data 
     train_dataset = dataset.PoseDataset(
         args.train_csv_fn, args.img_path_prefix, args.im_size,
         fliplr=args.fliplr,
@@ -176,15 +178,18 @@ def main(argv):
         should_downscale_images=args.should_downscale_images,
         downscale_height=args.downscale_height
     )
-
+    print ('training dataset size: {}'.format(len(train_dataset)))
 
     # augment the training data set by horizontal flip (2018. 6. 25)
     train_dataset.augmentByRotation((-5,5))
     #train_dataset.augmentByRotation((-10,-5,5,10))
+    print ('augment training dataset by rotation: {}'.format(len(train_dataset)))
  
     # augment the training data set by horizontal flip (2018. 6. 21)
-    train_dataset.augmentByFlip()
+    print ('augment training dataset by horizontal flip: {}'.format(len(train_dataset)))
 
+    ###########################################################################
+    # prepare training data 
     test_dataset = dataset.PoseDataset(
         args.test_csv_fn, args.img_path_prefix, args.im_size,
         fliplr=False, rotate=False,
@@ -201,15 +206,19 @@ def main(argv):
         downscale_height=args.downscale_height
     )
 
+
+    ###########################################################################
+    # prepare iterators
+
     np.random.seed(args.seed)
     train_iterator = iterators.MultiprocessIterator(train_dataset, args.batch_size,
                                                     n_processes=args.workers, n_prefetch=3)
-    test_iterator = iterators.MultiprocessIterator(
-        test_dataset, args.batch_size,
-        repeat=False, shuffle=False,
-        n_processes=1, n_prefetch=1)
+    test_iterator = iterators.MultiprocessIterator(test_dataset, args.batch_size,
+                                                   repeat=False, shuffle=False,
+                                                   n_processes=1, n_prefetch=1)
 
-    val_iterator = None
+    #val_iterator = None
+    val_iterator = train_iterator    # By default, training set is the validation set 
     if args.val_csv_fn is not None and args.val_csv_fn != '':
         small_train_dataset = dataset.PoseDataset(
             args.val_csv_fn,
