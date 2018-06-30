@@ -186,6 +186,7 @@ def main(argv):
     print ('augment training dataset by rotation: {}'.format(len(train_dataset)))
  
     # augment the training data set by horizontal flip (2018. 6. 21)
+    train_dataset.augmentByFlip()
     print ('augment training dataset by horizontal flip: {}'.format(len(train_dataset)))
 
     ###########################################################################
