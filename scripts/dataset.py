@@ -65,7 +65,7 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         h = rb[1] - lt[1]
         return x, y, w, h
 
-    def augmentByRotation(self, degrees):
+    def augmentByRotation(self, degrees, removeInvalidJoints=True):
         numImages = len(self)
 
         for i in range (numImages):
@@ -100,7 +100,7 @@ class PoseDataset(dataset_mixin.DatasetMixin):
 
 
                 # check all the joints are inside the image
-                if not np.all(is_valid_joints_rotated):
+                if removeInvalidJoints and not np.all(is_valid_joints_rotated):
                     print('Not all points are valid. Skip the rotated image.')
                     continue
 
@@ -297,6 +297,25 @@ class PoseDataset(dataset_mixin.DatasetMixin):
 
         print('{} images loaded'.format(len(self)))
         print('joints shape:', self.joints[0][1].shape)
+
+
+    def to_csv(self, filename):
+        """
+        Write to a text file in csv format
+        """
+
+        with open(filename,'w') as f:
+            for imageIdx in range (len(self)):
+                image_id, joints = self.joints[imageIdx]
+                is_valid_joints, bbox = self.info[imageIdx]
+
+                line = [image_id] + joints.reshape(1,-1)[0].tolist() + is_valid_joints[:,0].tolist()
+
+                for item in line[:-1]: 
+                    f.write("{}, ".format(item))
+                # last item
+                f.write("{}".format(line[-1]))
+                f.write("\n")
 
     def __len__(self):
         return len(self.joints)
