@@ -11,10 +11,10 @@ python ${PROJ_ROOT}/scripts/train.py \
 --snapshot_step 10000 \
 --test_step 1000 \
 --log_step 10 \
---train_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_train.csv \
---val_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_train.csv \
---test_csv_fn ${DATA_ROOT}/MET2/activity-met_n10_ub_test.csv \
---img_path_prefix=${DATA_ROOT}/MET2 \
+--train_csv_fn ${DATA_ROOT}/MET3/activity-met_n10_ub_train.csv \
+--val_csv_fn ${DATA_ROOT}/MET3/activity-met_n10_ub_train.csv \
+--test_csv_fn ${DATA_ROOT}/MET3/activity-met_n10_ub_test.csv \
+--img_path_prefix=${DATA_ROOT}/MET3 \
 --n_joints 8 \
 --seed 1701 \
 --im_size 227 \
