@@ -154,7 +154,7 @@ Here you can see that PCP and PCKh scores at step (iteration) 0.
 
 
 ### Testing
-To test the model use [`tests/test_snapshot.py`](tests/test_snapshot.py).  
+To test the model use [`test/test_snapshot.py`](test/test_snapshot.py).  
 - The script will produce PCP@0.5 and PCKh@0.5 scores applied on cropped pearsons.    
 - Scores wiil be computed for different crops.   
 - BBOX EXTENSION=1 means that the pearson was tightly cropped,    
@@ -167,7 +167,7 @@ BBOX EXTENSION=1.5 means that the bounding box of the person was enlarged in 1.5
    
    For example, 
    ```bash
-   python tests/test_snapshot.py lsp /var/data/out/lsp_alexnet_imagenet/checkpoint-1000000
+   python test/test_snapshot.py lsp /var/data/out/lsp_alexnet_imagenet/checkpoint-1000000
    ```
 
 
