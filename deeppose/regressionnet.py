@@ -11,9 +11,9 @@ from tqdm import tqdm
 import cv2 as cv # for flipping images
 
 #from . import alexnet
-from scripts import alexnet
+from deeppose import alexnet
 #from . import network_spec
-from scripts import network_spec
+from deeppose import network_spec
 #import poseevaluation
 from poseevaluation.utils import *
 #from poseevaluation.lsp import *
