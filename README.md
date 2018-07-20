@@ -99,24 +99,24 @@ python datasets/mpii_dataset.py
 ```
 
 ### Training
-[examples/](examples/) provide several scripts for training on LSP + LSP_EXT and MPII:
-- [examples/train_lsp_alexnet_imagenet_small.sh](examples/train_lsp_alexnet_imagenet_small.sh) to run training Alexnet on LSP using weights pretrained on Imagenet.
-- [examples/train_lsp_alexnet_scratch.sh](examples/train_lsp_alexnet_scratch.sh) to run training Alexnet on LSP + LSP_EXT from scratch
-- [examples/train_mpii_alexnet_imagenet.py](examples/train_mpii_alexnet_imagenet.sh) to run training Alexnet on MPII using weights pretrained on Imagenet.
-- [examples/train_mpii_alexnet_scratch.py](examples/train_mpii_alexnet_scratch.sh) to run training Alexnet on MPII from scratch.
+[train/](train/)  folder contains several scripts for training on LSP + LSP_EXT, MPII, and MET:
+- [train/train_lsp_alexnet_imagenet_small.sh](train/train_lsp_alexnet_imagenet_small.sh) to run training Alexnet on LSP using weights pretrained on Imagenet.
+- [train/train_lsp_alexnet_scratch.sh](train/train_lsp_alexnet_scratch.sh) to run training Alexnet on LSP + LSP_EXT from scratch
+- [train/train_mpii_alexnet_imagenet.py](train/train_mpii_alexnet_imagenet.sh) to run training Alexnet on MPII using weights pretrained on Imagenet.
+- [train/train_mpii_alexnet_scratch.py](train/train_mpii_alexnet_scratch.sh) to run training Alexnet on MPII from scratch.
 
 **Example:** 
 To use bash script, run the following from the ROOT folder.
 
 ```bash
-bash examples/train_lsp_alexnet_imagenet_small.sh
+bash train/train_lsp_alexnet_imagenet_small.sh
 ```
 
 To run the python code, setup the PYTHONPATH and then launch the py code.
 
 ```bash
 export PYTHONPATH="$(pwd):$(pwd)/scripts"
-python examples/train_mpii_alexnet_imagenet.py 
+python train/train_mpii_alexnet_imagenet.py 
 ```
 
 
