@@ -14,13 +14,13 @@ import cv2 as cv # for flipping images
 from deeppose import alexnet
 #from . import network_spec
 from deeppose import network_spec
-#import poseevaluation
-from poseevaluation.utils import *
-#from poseevaluation.lsp import *
-from poseevaluation import lsp
-from poseevaluation import mpii
-from poseevaluation import met
-from poseevaluation.pcp import *
+#import evaluation
+from evaluation.utils import *
+#from evaluation.lsp import *
+from evaluation import lsp
+from evaluation import mpii
+from evaluation import met
+from evaluation.pcp import *
 
 def create_regression_net(n_joints=14, optimizer_type=None,
                           init_snapshot_path=None, is_resume=False,
@@ -172,7 +172,7 @@ def batch2feeds_flip(batch):
     num_images = len(images)
     images_flipped = list()
     joints_gt_flipped = joints_gt
-    
+
 
     # cleaner code using zip
     for image, joint in zip(images, joints_gt_flipped):
@@ -180,7 +180,7 @@ def batch2feeds_flip(batch):
         images_flipped.append(cv.flip(image,1))
         # flip joints by inverting x coordinate
         joint[:,0]  = -joint[:,0]
- 
+
     """
     for i in range(num_images):
         image = images[i]
@@ -273,9 +273,9 @@ def calculate_metric(gt_joints, predicted_joints, orig_bboxes, dataset_name, met
     predicted_joints = np.clip(predicted_joints, -0.5, 0.5)
     # convert joints
     for i in range(gt_joints.shape[0]):
-        #gt_joints[i, ...] = poseevaluation.utils.project_joint_onto_original_image(gt_joints[i],
+        #gt_joints[i, ...] = evaluation.utils.project_joint_onto_original_image(gt_joints[i],
         gt_joints[i, ...] = project_joint_onto_original_image(gt_joints[i],orig_bboxes[i])
-        #predicted_joints[i, ...] = poseevaluation.utils.project_joint_onto_original_image(
+        #predicted_joints[i, ...] = evaluation.utils.project_joint_onto_original_image(
         predicted_joints[i, ...] = project_joint_onto_original_image(
             predicted_joints[i], orig_bboxes[i])
 
@@ -290,25 +290,25 @@ def calculate_metric(gt_joints, predicted_joints, orig_bboxes, dataset_name, met
     else: # for MET with 8 point model
         gt_joints = met.convert2canonical(gt_joints)
         predicted_joints = met.convert2canonical(predicted_joints)
- 
 
-#    gt_joints = poseevaluation.__dict__[dataset_name].convert2canonical(gt_joints)
-#    predicted_joints = poseevaluation.__dict__[dataset_name].convert2canonical(predicted_joints)
+
+#    gt_joints = evaluation.__dict__[dataset_name].convert2canonical(gt_joints)
+#    predicted_joints = evaluation.__dict__[dataset_name].convert2canonical(predicted_joints)
 
 #   QUICK FIX FOR LSP
 #    gt_joints = convert2canonical(gt_joints)
 #    predicted_joints = convert2canonical(predicted_joints)
 
 
-#    from poseevaluation.pcp import *
+#    from evaluation.pcp import *
     if metric_name == 'RelaxedPCP':
-#        full_scores = poseevaluation.pcp.eval_relaxed_pcp(gt_joints, predicted_joints)
+#        full_scores = evaluation.pcp.eval_relaxed_pcp(gt_joints, predicted_joints)
         full_scores = eval_relaxed_pcp(gt_joints, predicted_joints)
     elif metric_name == 'PCP':
-#        full_scores = poseevaluation.pcp.eval_strict_pcp(gt_joints, predicted_joints)
+#        full_scores = evaluation.pcp.eval_strict_pcp(gt_joints, predicted_joints)
         full_scores = eval_strict_pcp(gt_joints, predicted_joints)
     elif metric_name == 'PCKh':
-#        full_scores = poseevaluation.pcp.eval_pckh(dataset_name, gt_joints, predicted_joints)
+#        full_scores = evaluation.pcp.eval_pckh(dataset_name, gt_joints, predicted_joints)
         full_scores = eval_pckh(dataset_name, gt_joints, predicted_joints)
     else:
         raise ValueError()
@@ -323,18 +323,18 @@ def print_scores(global_step, score_per_stick, score_per_part, part_names, tag_p
     print ('\t'.join(['{:.3f}'.format(val) for val in score_per_part]))
 
     # print 'Step {} {}/full_{}:'.format(global_step, tag_prefix, score_name)
-    # print '\t'.join(poseevaluation.pcp.CANONICAL_STICK_NAMES)
+    # print '\t'.join(evaluation.pcp.CANONICAL_STICK_NAMES)
     # print '\t'.join(['{:.3f}'.format(val) for val in score_per_stick])
 
 
 def print_pckh(dataset_name, global_step, score_per_joint, tag_prefix):
     print ('Step\t {}\t {}/mPCKh\t {:.3f}'.format(global_step, tag_prefix,
                                              np.mean(score_per_joint)))
-    # print '\t'.join(poseevaluation.__dict__[dataset_name].CANONICAL_JOINT_NAMES)
+    # print '\t'.join(evaluation.__dict__[dataset_name].CANONICAL_JOINT_NAMES)
     # print '\t'.join(['{:.3f}'.format(val) for val in score_per_joint])
 
     pckh_symmetric_joints, joint_names = \
-        poseevaluation.pcp.average_pckh_symmetric_joints(dataset_name, score_per_joint)
+        evaluation.pcp.average_pckh_symmetric_joints(dataset_name, score_per_joint)
     print ('Step\t {}\t {}/mSymmetricPCKh\t {:.3f}'.format(global_step, tag_prefix,
                                              np.mean(pckh_symmetric_joints)))
     print ('Step {} {}/parts_SymmetricPCKh:'.format(global_step, tag_prefix))
@@ -420,18 +420,18 @@ def calc_pcp(global_step, gt_joints, gt_joints_is_valid, predicted_joints, orig_
     pcp_per_stick = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
                                      dataset_name=dataset_name,
                                      metric_name='PCP')
-    pcp_per_part, part_names = poseevaluation.pcp.average_pcp_left_right_limbs(pcp_per_stick)
+    pcp_per_part, part_names = evaluation.pcp.average_pcp_left_right_limbs(pcp_per_stick)
     print_scores(global_step, pcp_per_stick, pcp_per_part, part_names, tag_prefix, 'PCP')
 
     relaxed_pcp_per_stick = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
                                              dataset_name=dataset_name, metric_name='RelaxedPCP')
-    relaxed_pcp_per_part, part_names = poseevaluation.pcp.average_pcp_left_right_limbs(relaxed_pcp_per_stick)
+    relaxed_pcp_per_part, part_names = evaluation.pcp.average_pcp_left_right_limbs(relaxed_pcp_per_stick)
     print_scores(global_step, relaxed_pcp_per_stick, relaxed_pcp_per_part, part_names, tag_prefix, 'RelaxedPCP')
 
     pckh_per_joint = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
                                       dataset_name=dataset_name, metric_name='PCKh')
     pckh_symmetric_joints, joint_names = \
-        poseevaluation.pcp.average_pckh_symmetric_joints(dataset_name, pckh_per_joint)
+        evaluation.pcp.average_pckh_symmetric_joints(dataset_name, pckh_per_joint)
     print_pckh(dataset_name, global_step, pckh_per_joint, tag_prefix)
 
 
@@ -499,18 +499,18 @@ def evaluate_pcp(net, pose_loss_op, test_iterator, summary_writer, dataset_name,
     pcp_per_stick = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
                                      dataset_name=dataset_name,
                                      metric_name='PCP')
-    #pcp_per_part, part_names = poseevaluation.pcp.average_pcp_left_right_limbs(pcp_per_stick)
+    #pcp_per_part, part_names = evaluation.pcp.average_pcp_left_right_limbs(pcp_per_stick)
     #print_scores(global_step, pcp_per_stick, pcp_per_part, part_names, tag_prefix, 'PCP')
 
     #relaxed_pcp_per_stick = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
     #                                         dataset_name=dataset_name, metric_name='RelaxedPCP')
-    #relaxed_pcp_per_part, part_names = poseevaluation.pcp.average_pcp_left_right_limbs(relaxed_pcp_per_stick)
+    #relaxed_pcp_per_part, part_names = evaluation.pcp.average_pcp_left_right_limbs(relaxed_pcp_per_stick)
     #print_scores(global_step, relaxed_pcp_per_stick, relaxed_pcp_per_part, part_names, tag_prefix, 'RelaxedPCP')
 
     #pckh_per_joint = calculate_metric(gt_joints, predicted_joints, orig_bboxes,
     #                                  dataset_name=dataset_name, metric_name='PCKh')
     #pckh_symmetric_joints, joint_names = \
-    #    poseevaluation.pcp.average_pckh_symmetric_joints(dataset_name, pckh_per_joint)
+    #    evaluation.pcp.average_pckh_symmetric_joints(dataset_name, pckh_per_joint)
     #print_pckh(dataset_name, global_step, pckh_per_joint, tag_prefix)
 
     if summary_writer is not None:
@@ -528,5 +528,3 @@ def evaluate_pcp(net, pose_loss_op, test_iterator, summary_writer, dataset_name,
         summary_writer.add_summary(create_sumamry('{}/pose_loss'.format(tag_prefix), avg_loss),
                                    global_step=global_step)
     return pcp_per_stick, None
-
-

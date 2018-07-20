@@ -1,7 +1,7 @@
 # Copyright (c) 2016 Artsiom Sanakoyeu
 
 import numpy as np
-import poseevaluation
+import evaluation
 """
 The canonical part stick order:
 0 Head
@@ -117,7 +117,7 @@ def eval_pckh(dataset_name, gt_joints, predicted_joints, thresh=0.5):
         raise ValueError('Len of gt must be equal to len of predicted')
     if len(gt_joints) == 0:
         raise ValueError('Empty array')
-    num_joints = poseevaluation.__dict__[dataset_name].NUM_JOINTS
+    num_joints = evaluation.__dict__[dataset_name].NUM_JOINTS
     num_examples = len(gt_joints)
 
     is_matched = np.zeros((num_examples, num_joints), dtype=int)
