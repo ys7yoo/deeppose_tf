@@ -1,8 +1,10 @@
 import sys
 import shlex
 import os.path
-import scripts.train
-import scripts.config
+
+import model.config
+import train
+
 
 argv = """
 --max_iter 1000000 \

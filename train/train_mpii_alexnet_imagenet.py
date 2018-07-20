@@ -1,9 +1,9 @@
 import sys
 import shlex
 import os.path
-from scripts import train
-from scripts import config
 
+from model import config
+import train
 
 print(config.ROOT_DIR)
 print(config.MPII_DATASET_ROOT)

@@ -5,7 +5,7 @@ DATA_ROOT=/var/data
 
 CUDA_VISIBLE_DEVICES=${1} \
 PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH \
-python ${PROJ_ROOT}/scripts/train.py \
+python ${PROJ_ROOT}/train/train.py \
 --max_iter 200000 \
 --batch_size 128 \
 --snapshot_step 10000 \

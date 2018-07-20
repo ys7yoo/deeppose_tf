@@ -1,11 +1,11 @@
 #!/bin/bash
 PROJ_ROOT=$(pwd)
 CUDA_VISIBLE_DEVICES=0 \
-export PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH 
+export PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH
 
 DATA_ROOT=/var/data
 
-python ${PROJ_ROOT}/scripts/train.py \
+python ${PROJ_ROOT}/train/train.py \
 --max_iter 1000000 \
 --batch_size 128 \
 --snapshot_step 10000 \

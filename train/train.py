@@ -7,7 +7,7 @@ import cmd_options
 import dataset
 import os
 import time
-import regressionnet
+from model import regressionnet
 import tensorflow as tf
 import copy
 from tqdm import tqdm
@@ -91,7 +91,7 @@ def train_loop(net, saver, loss_op, pose_loss_op, train_op, dataset_name, train_
         #                                               conv_lr=conv_lr,
         #                                               fc_lr=fc_lr,
         #                                               phase='train')
- 
+
 
         feed_dict = regressionnet.fill_joint_feed_dict(net,
                                                        regressionnet.batch2feeds(train_iterator.next())[:3],
@@ -160,7 +160,7 @@ def main(argv):
         test_bbox_extension_range = (bbox_extension_range[1], bbox_extension_range[1])
 
     ###########################################################################
-    # prepare training data 
+    # prepare training data
     train_dataset = dataset.PoseDataset(
         args.train_csv_fn, args.img_path_prefix, args.im_size,
         fliplr=args.fliplr,
@@ -184,13 +184,13 @@ def main(argv):
     train_dataset.augmentByRotation((-5,5))
     #train_dataset.augmentByRotation((-10,-5,5,10))
     print ('augment training dataset by rotation: {}'.format(len(train_dataset)))
- 
+
     # augment the training data set by horizontal flip (2018. 6. 21)
     train_dataset.augmentByFlip()
     print ('augment training dataset by horizontal flip: {}'.format(len(train_dataset)))
 
     ###########################################################################
-    # prepare training data 
+    # prepare training data
     test_dataset = dataset.PoseDataset(
         args.test_csv_fn, args.img_path_prefix, args.im_size,
         fliplr=False, rotate=False,
@@ -219,7 +219,7 @@ def main(argv):
                                                    n_processes=1, n_prefetch=1)
 
     #val_iterator = None
-    val_iterator = train_iterator    # By default, training set is the validation set 
+    val_iterator = train_iterator    # By default, training set is the validation set
     if args.val_csv_fn is not None and args.val_csv_fn != '':
         small_train_dataset = dataset.PoseDataset(
             args.val_csv_fn,
