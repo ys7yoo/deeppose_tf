@@ -7,7 +7,7 @@ CUDA_VISIBLE_DEVICES=${1} \
 PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH \
 python ${PROJ_ROOT}/scripts/train.py \
 --max_iter 500000 \
---batch_size 128 \
+--batch_size 256 \
 --snapshot_step 10000 \
 --test_step 1000 \
 --log_step 10 \
