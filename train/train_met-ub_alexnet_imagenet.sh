@@ -37,7 +37,7 @@ python ${PROJ_ROOT}/train/train.py \
 --fc_lr 0.0005 \
 --fix_conv_iter 10000 \
 --optimizer adam \
---o_dir ${PROJ_ROOT}/out/met_n10_ub_alexnet_imagenet_${HOSTNAME}_gpu${1}_${DATE_TIME} \
+--o_dir ${PROJ_ROOT}/out/${DATE_TIME}_met_n10_ub_alexnet_imagenet_${HOSTNAME}_gpu${1} \
 --gcn \
 --fliplr \
 --workers 8 \
