@@ -2,12 +2,14 @@
 # Copyright (c) 2016 Artsiom Sanakoyeu
 
 from __future__ import division
+
+from data import dataset
+from model import cmd_options
+from model import regressionnet
+
 from chainer import iterators
-import cmd_options
-import dataset
 import os
 import time
-from model import regressionnet
 import tensorflow as tf
 import copy
 from tqdm import tqdm
@@ -16,7 +18,7 @@ import math
 import pprint
 import datetime
 
-from regressionnet import evaluate_pcp, create_sumamry
+from model.regressionnet import evaluate_pcp, create_sumamry
 
 
 def evaluate(net, pose_loss_op, test_iterator, summary_writer, tag='test/pose_loss'):

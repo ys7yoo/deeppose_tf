@@ -3,6 +3,11 @@ PROJ_ROOT=$(pwd)
 
 DATA_ROOT=/var/data
 
+# info for output
+HOSTNAME=$(hostname)
+DATE_TIME=$(date +%Y.%m.%d_%R)
+
+
 CUDA_VISIBLE_DEVICES=${1} \
 PYTHONPATH=${PROJ_ROOT}:$PYTHONPATH \
 python ${PROJ_ROOT}/train/train.py \
@@ -32,7 +37,7 @@ python ${PROJ_ROOT}/train/train.py \
 --fc_lr 0.0005 \
 --fix_conv_iter 10000 \
 --optimizer adam \
---o_dir ${PROJ_ROOT}/out/met_n10_ub_alexnet_imagenet_gpu${1} \
+--o_dir ${PROJ_ROOT}/out/met_n10_ub_alexnet_imagenet_${HOSTNAME}_gpu${1}_${DATE_TIME} \
 --gcn \
 --fliplr \
 --workers 8 \

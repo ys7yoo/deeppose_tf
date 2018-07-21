@@ -7,7 +7,30 @@ from __future__ import unicode_literals
 
 import argparse
 import os.path
-from config import *
+
+
+#from config import *
+# copied to here
+import os
+
+# Full path to the project root
+ROOT_DIR = os.path.expanduser('~/src/deeppose')
+OUTPUT_DIR = os.path.join(ROOT_DIR, 'out')
+
+# put data in /tmp
+LSP_DATASET_ROOT = os.path.expanduser('/var/data/lsp')
+LSP_EXT_DATASET_ROOT = os.path.expanduser('/var/data/lsp_ext')
+
+MPII_DATASET_ROOT = os.path.expanduser('/var/data/mpii')
+
+MET_DATASET_ROOT = os.path.expanduser('/var/data/MET3')
+
+#default location (old)
+#LSP_DATASET_ROOT = os.path.expanduser('~/data/lsp')
+#LSP_EXT_DATASET_ROOT = os.path.expanduser('~/data/lsp_ext')
+#MPII_DATASET_ROOT = os.path.expanduser('~/data/mpii')
+
+
 
 
 def cast_path(value):

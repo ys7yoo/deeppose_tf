@@ -3,6 +3,9 @@
 
 from __future__ import division
 from __future__ import print_function
+
+from data import augment
+
 from chainer.dataset import dataset_mixin
 import csv
 import cv2 as cv
@@ -13,8 +16,6 @@ import os
 import math
 import warnings
 from tqdm import tqdm
-
-from tools import augment
 
 from matplotlib import pyplot as plt
 
