@@ -160,7 +160,7 @@ def create_regression_net(n_joints=14, optimizer_type=None,
                 saver = tf.train.Saver(max_to_keep=None)
                 saver.restore(net.sess, init_snapshot_path)
 
-        train_op = network_spec.training_convnet(net, pose_loss_op, fc_lr=fc_lr_pl,
+        train_op = training_convnet(net, pose_loss_op, fc_lr=fc_lr_pl,
                                                        conv_lr=conv_lr_pl,
                                                        optimizer_type=optimizer_type,
                                                        trace_gradients=True)
