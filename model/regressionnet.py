@@ -1,3 +1,7 @@
+from __future__ import absolute_import
+from __future__ import division
+from __future__ import print_function
+
 from model import alexnet
 
 import tensorflow as tf
@@ -22,11 +26,6 @@ from evaluation.pcp import *
 
 
 ## training options
-from __future__ import absolute_import
-from __future__ import division
-from __future__ import print_function
-
-
 def training_convnet(net, loss_op, fc_lr, conv_lr, optimizer_type='adam',
                      trace_gradients=False):
     with net.graph.as_default():
