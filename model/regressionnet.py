@@ -527,24 +527,32 @@ def evaluate_pcp(net, pose_loss_op, test_iterator, summary_writer, dataset_name,
 
     print(len(test_it.dataset))
     for i, batch in tqdm(enumerate(test_it), total=num_batches):
+
         feeds = batch2feeds(batch)
+
+        gt_joints.append(feeds[1])
+        gt_joints_is_valid.append(feeds[2])
+        orig_bboxes.append(np.vstack([x['bbox'] for x in feeds[3]]))
+
         feed_dict = fill_joint_feed_dict(net,
                                          feeds[:3],
                                          conv_lr=0.0,
                                          fc_lr=0.0,
                                          phase='test')
-        pred_j, batch_loss_value = net.sess.run([net.fc_regression, pose_loss_op], feed_dict=feed_dict)
-        total_loss += batch_loss_value * len(batch)
-        gt_joints.append(feeds[1])
-        gt_joints_is_valid.append(feeds[2])
-        predicted_joints.append(pred_j.reshape(-1, num_joints, 2))
-        orig_bboxes.append(np.vstack([x['bbox'] for x in feeds[3]]))
 
-    avg_loss = total_loss / num_test_examples
+        pred_j, batch_loss_value = net.sess.run([net.fc_regression, pose_loss_op], feed_dict=feed_dict)
+
+        predicted_joints.append(pred_j.reshape(-1, num_joints, 2))
+        total_loss += batch_loss_value * len(batch)
+
     gt_joints = np.vstack(gt_joints)
     gt_joints_is_valid = np.vstack(gt_joints_is_valid)
-    predicted_joints = np.vstack(predicted_joints)
     orig_bboxes = np.vstack(orig_bboxes)
+
+    predicted_joints = np.vstack(predicted_joints)
+
+    avg_loss = total_loss / num_test_examples
+
     assert predicted_joints.shape[0] == gt_joints.shape[0] == orig_bboxes.shape[0] == num_test_examples
     assert predicted_joints.shape[1] == gt_joints.shape[1] == num_joints
     assert predicted_joints.shape[2] == gt_joints.shape[2] == 2
