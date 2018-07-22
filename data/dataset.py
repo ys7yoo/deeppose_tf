@@ -503,15 +503,15 @@ class PoseDataset(dataset_mixin.DatasetMixin):
 
         # import pdb; pdb.set_trace()   # for DEBUG
 
-        #print(image.shape)      # (4032, 3024, 3)   (H, W, C)
+        #print(image.shape)      # (480, 360, 3)    (H, W, C)
         #print(valid_joints)
-        #print(bbox)             # [ 835. 1135.  907. 1069.]
+        #print(bbox)             # [ 99.4047619  135.11904762 107.97619048 127.26190476]
         image, valid_joints, bbox, bbox_origin = self.apply_cropping(image, valid_joints, bbox,
                                                         bbox_extension_range=bbox_extension_range,
                                                         shift=shift)
-        #print(image.shape)      # (2139, 1815, 3)
+        #print(image.shape)      # (256, 217, 3) 
         #print(valid_joints)
-        #print(bbox)             # [   0    0 1815 2139]
+        #print(bbox)             # [  0   0 217 256]
         check_bounds(valid_joints, *bbox, exclude_upper_bound=True)
 
         crop_bbox = np.array(bbox)
