@@ -1,6 +1,3 @@
-# Based on code by Shunta Saito
-# Copyright (c) 2016 Artsiom Sanakoyeu
-
 from __future__ import division
 from __future__ import print_function
 
@@ -17,7 +14,7 @@ import math
 import warnings
 from tqdm import tqdm
 
-from matplotlib import pyplot as plt
+# from matplotlib import pyplot as plt
 
 class PoseDataset(dataset_mixin.DatasetMixin):
 
@@ -341,43 +338,6 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         zoomed_joints[:, 1] = np.clip(zoomed_joints[:, 1], 0, zoomed_image.shape[0] - 1)
         return zoomed_image, zoomed_joints.astype(np.int32)
 
-    def crop_reshape(self, image, joints, bbox):
-        joints = np.array(joints)
-        x_min, y_min, w, h = bbox
-        image = image[y_min:y_min + h, x_min:x_min + w]
-        assert y_min == 0
-        assert x_min == 0
-        joints -= np.array([x_min, y_min])
-        assert image.shape[:2] == (h, w)
-
-        fx, fy = self.im_size / w, self.im_size / h
-        image, joints = self.apply_zoom(image, joints, fx, fy)
-        bbox = np.array([0, 0, image.shape[1], image.shape[0]], dtype=int)
-        return image, joints, bbox
-
-    @staticmethod
-    def apply_coord_normalization(image, joints):
-        joints = np.array(joints, dtype=np.float32)
-        h, w = image.shape[:2]
-        check_bounds(joints, 0, 0, w, h)
-        # TODO: exclude the upper bound of the bbox
-        joints[:, 0] /= w
-        joints[:, 1] /= h
-        joints -= 0.5
-        bbox = np.array([-0.5, -0.5, 1.0, 1.0], dtype=np.float32)
-        return joints, bbox
-
-    @staticmethod
-    def apply_gcn(image):
-        """
-        Global contrast normalization.
-        Make RGB pixels zero-mean and divide by std.
-        """
-        image = image.astype(np.float32)
-        image -= image.reshape(-1, 3).mean(axis=0)
-        image /= image.reshape(-1, 3).std(axis=0) + 1e-5
-        return image
-
     def apply_cropping(self, image, joints, bbox, bbox_extension_range=None, shift=None):
         """
         Randomly enlarge the bounding box of joints and randomly shift the box.
@@ -434,6 +394,44 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         joints -= bbox_origin
         bbox = np.array([0, 0, w, h], dtype=int)
         return image, joints, bbox, bbox_origin
+
+
+    def crop_reshape(self, image, joints, bbox):
+        joints = np.array(joints)
+        x_min, y_min, w, h = bbox
+        image = image[y_min:y_min + h, x_min:x_min + w]
+        assert y_min == 0
+        assert x_min == 0
+        joints -= np.array([x_min, y_min])
+        assert image.shape[:2] == (h, w)
+
+        fx, fy = self.im_size / w, self.im_size / h
+        image, joints = self.apply_zoom(image, joints, fx, fy)
+        bbox = np.array([0, 0, image.shape[1], image.shape[0]], dtype=int)
+        return image, joints, bbox
+
+    @staticmethod
+    def apply_coord_normalization(image, joints):
+        joints = np.array(joints, dtype=np.float32)
+        h, w = image.shape[:2]
+        check_bounds(joints, 0, 0, w, h)
+        # TODO: exclude the upper bound of the bbox
+        joints[:, 0] /= w
+        joints[:, 1] /= h
+        joints -= 0.5
+        bbox = np.array([-0.5, -0.5, 1.0, 1.0], dtype=np.float32)
+        return joints, bbox
+
+    @staticmethod
+    def apply_gcn(image):
+        """
+        Global contrast normalization.
+        Make RGB pixels zero-mean and divide by std.
+        """
+        image = image.astype(np.float32)
+        image -= image.reshape(-1, 3).mean(axis=0)
+        image /= image.reshape(-1, 3).std(axis=0) + 1e-5
+        return image
 
     
     def get_image_and_joints(self, imageIdx):
