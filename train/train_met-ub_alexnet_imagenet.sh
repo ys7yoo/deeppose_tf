@@ -24,8 +24,8 @@ python ${PROJ_ROOT}/train/train.py \
 --seed 1701 \
 --im_size 227 \
 --min_dim 6 \
---shift 0.1 \
---bbox_extension_min 1.2 \
+--shift 1 \
+--bbox_extension_min 2.0 \
 --bbox_extension_max 2.0 \
 --coord_normalize \
 --fname_index 0 \
