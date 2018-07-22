@@ -501,21 +501,29 @@ class PoseDataset(dataset_mixin.DatasetMixin):
         if self.rotate:
             raise NotImplementedError
 
-        #print(image.shape)      # (213, 170, 3)
+        # import pdb; pdb.set_trace()   # for DEBUG
+
+        #print(image.shape)      # (4032, 3024, 3)   (H, W, C)
         #print(valid_joints)
+        #print(bbox)             # [ 835. 1135.  907. 1069.]
         image, valid_joints, bbox, bbox_origin = self.apply_cropping(image, valid_joints, bbox,
                                                         bbox_extension_range=bbox_extension_range,
                                                         shift=shift)
-        #print(image.shape)      # (131, 48, 3)
+        #print(image.shape)      # (2139, 1815, 3)
         #print(valid_joints)
+        #print(bbox)             # [   0    0 1815 2139]
+        check_bounds(valid_joints, *bbox, exclude_upper_bound=True)
+
         crop_bbox = np.array(bbox)
         # shift bbox to its original position
         crop_bbox[:2] += bbox_origin
 
-        check_bounds(valid_joints, *bbox, exclude_upper_bound=True)
+
+        ## crop and reshape to (227, 227, 3) for AlexNet
         image, valid_joints, bbox = self.crop_reshape(image, valid_joints, bbox)
         #print(image.shape)      # (227, 227, 3)
         #print(valid_joints)
+        #print(bbox)             # [  0   0 227 227]
         check_bounds(valid_joints, *bbox, exclude_upper_bound=True)
 
         if self.fliplr and np.random.randint(0, 2) == 1:
