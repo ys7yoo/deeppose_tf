@@ -43,4 +43,5 @@ python ${PROJ_ROOT}/train/train.py \
 --workers 8 \
 --net_type Alexnet \
 -s ${PROJ_ROOT}/weights/bvlc_alexnet.tf \
---reset_iter_counter
+--reset_iter_counter \
+--should_downscale_images
