@@ -41,7 +41,7 @@ def evaluate(net, pose_loss_op, test_iterator, summary_writer, tag='test/pose_lo
     total_loss = 0.0
     cnt = 0
     num_batches = int(math.ceil(len(test_it.dataset) / test_it.batch_size))
-    print(len(test_it.dataset))
+    print('evaluating {} images'.format(len(test_it.dataset)))
     for batch in tqdm(test_it, total=num_batches):
         feed_dict = regressionnet.fill_joint_feed_dict(net,
                                                        regressionnet.batch2feeds(batch)[:3],
