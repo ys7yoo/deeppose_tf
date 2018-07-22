@@ -25,8 +25,8 @@ python ${PROJ_ROOT}/train/train.py \
 --im_size 227 \
 --min_dim 6 \
 --shift 1 \
---bbox_extension_min 2.0 \
---bbox_extension_max 2.0 \
+--bbox_extension_min 1.8 \
+--bbox_extension_max 2.2 \
 --coord_normalize \
 --fname_index 0 \
 --dataset_name met \
